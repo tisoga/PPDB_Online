@@ -3,7 +3,19 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import TestScreen from '../screens/TestScreen'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { WelcomeScreen, EventScreen, NotifikasiScreen, ProsesPendaftaranScreen, HomeScreen, ProfileScreen } from "../screens/menu";
+import {
+    WelcomeScreen,
+    EventScreen,
+    NotifikasiScreen,
+    ProsesPendaftaranScreen,
+    HomeScreen,
+    ProfileScreen,
+    PelengkapanIdentitasScreen,
+    PelengkapanBerkas,
+    PengajuanPendaftaranScreen,
+    PilihJalurScreen,
+    BerkasScreen
+} from "../screens/menu";
 import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator()
@@ -15,9 +27,36 @@ const ProfileStack = createStackNavigator()
 
 const HomeStackScreen = () => {
     return (
-        <HomeStack.Navigator>
+        <HomeStack.Navigator
+            initialRouteName='HomeScreen'
+        >
             <HomeStack.Screen name='HomeScreen' component={HomeScreen} options={{ headerShown: false }} />
             <HomeStack.Screen name='ProsesScreen' component={ProsesPendaftaranScreen} options={{ headerShown: false }} />
+            <HomeStack.Screen
+                name='PelengkapanIdentitasScreen'
+                component={PelengkapanIdentitasScreen}
+                options={{ headerShown: false }}
+            />
+            <HomeStack.Screen
+                name='PelengkapanBerkasScreen'
+                component={PelengkapanBerkas}
+                options={{ headerShown: false }}
+            />
+            <HomeStack.Screen
+                name='BerkasScreen'
+                component={BerkasScreen}
+                options={{ headerShown: false }}
+            />
+            <HomeStack.Screen
+                name='PengajuanScreen'
+                component={PengajuanPendaftaranScreen}
+                options={{ headerShown: false }}
+            />
+            <HomeStack.Screen
+                name='PilihJalurScreen'
+                component={PilihJalurScreen}
+                options={{ headerShown: false }}
+            />
         </HomeStack.Navigator>
     )
 }
@@ -83,7 +122,7 @@ const HomeNavigation = () => {
                 <Tab.Screen name='HomeTab' component={HomeStackScreen} options={{ tabBarLabel: 'Beranda' }} />
                 <Tab.Screen name='JadwalTab' component={EventStackScreen} options={{ tabBarLabel: 'Jadwal PPDB' }} />
                 <Tab.Screen name='NotifikasiTab' component={NotifikasiStackScreen} options={{ tabBarLabel: 'Notifikasi' }} />
-                <Tab.Screen name='ProfileTab' component={ProfileStackSCreen} options={{ tabBarLabel: 'Profile' }}/>
+                <Tab.Screen name='ProfileTab' component={ProfileStackSCreen} options={{ tabBarLabel: 'Profile' }} />
             </Tab.Navigator>
         )
     }

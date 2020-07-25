@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
-    StyleSheet
+    StyleSheet, Alert
 } from 'react-native'
 import {
     Header,
@@ -23,48 +23,82 @@ import {
 } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
-import DocumentPicker from 'react-native-document-picker'
+import ImagePicker from 'react-native-image-picker'
+import { useSelector, useDispatch } from 'react-redux'
+import { setIdentiasForm } from '../../redux/actions'
+import { AlamatPicker } from './form/'
+import { isObjectsEmpty } from '../../components/others'
+import { putMethod } from '../../components/apimethod'
+import { baseUrl, profileUrl } from '../../components/url'
 
-const PelengkapanIdentitas = () => {
-    const [foto, setFoto] = useState('')
-    const [date, setDate] = useState({chosenDate: ''})
+const PelengkapanIdentitas = ({ navigation }) => {
+    const formData = useSelector((state) => state.IdentitasFormReducer)
+    const userState = useSelector((state) => state.UserReducer)
     const [fileName, setFileName] = useState('')
-    
+    const dispatch = useDispatch()
+
     const selectFotoDiri = async () => {
-        try {
-            const res = await DocumentPicker.pick({
-                type: [DocumentPicker.types.allFiles],
-                //There can me more options as well
-                // DocumentPicker.types.allFiles
-                // DocumentPicker.types.images
-                // DocumentPicker.types.plainText
-                // DocumentPicker.types.audio
-                // DocumentPicker.types.pdf
-            });
-            //Printing the log realted to the file
-            console.log('res : ' + JSON.stringify(res));
-            console.log('URI : ' + res.uri);
-            console.log('Type : ' + res.type);
-            console.log('File Name : ' + res.name);
-            console.log('File Size : ' + res.size);
-            //Setting the state to show single file attributes
-            setFoto(res)
-            setFileName(res.name)
-        } catch (err) {
-            //Handling any exception (If any)
-            if (DocumentPicker.isCancel(err)) {
-                //If user canceled the document selection
-                alert('Canceled from single doc picker');
+        const options = {};
+        ImagePicker.launchImageLibrary(options, response => {
+            console.log("Response", response.fileName);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
             } else {
-                //For Unknown Error
-                alert('Unknown Error: ' + JSON.stringify(err));
-                throw err;
+                dispatch(setIdentiasForm('foto_diri', {
+                    name: response.fileName,
+                    uri: Platform.OS === "android" ? response.uri : response.uri.replace("file://", ""),
+                    type: response.type
+                }))
+                setFileName(response.fileName)
             }
+            console.log(formData.foto_diri)
+        });
+    }
+
+    useEffect(() => {
+        dispatch(setIdentiasForm('first_name', userState.user.first_name))
+        dispatch(setIdentiasForm('last_name', userState.user.last_name))
+    }, [])
+
+    const saveButton = async () => {
+        let sendData = new FormData();
+        const url = baseUrl + profileUrl
+        // console.log(alamat_lengkap)
+        if (isObjectsEmpty(formData)) {
+            const tanggal_lahir = formData.tanggal_lahir.getFullYear() + '-'
+                + formData.tanggal_lahir.getMonth() + '-'
+                + formData.tanggal_lahir.getDate();
+            const alamat_lengkap = formData.alamat + ', ' + formData.provinsi + ', ' + formData.kota + ', ' +
+                formData.kecamatan + ', ' + formData.desa;
+            sendData.append('first_name', formData.first_name);
+            sendData.append('last_name', formData.last_name);
+            sendData.append('tanggal_lahir', tanggal_lahir);
+            sendData.append('jenis_kelamin', 'L');
+            sendData.append('tempat_lahir', formData.tempat_lahir);
+            sendData.append('umur', formData.umur);
+            sendData.append('alamat', alamat_lengkap);
+            sendData.append('foto_diri', formData.foto_diri);
+            const result = await putMethod(url, sendData, userState.token)
+            console.log(result)
+            if (result.data) {
+                Alert.alert('Berhasil', 'Pelengkapan Identitas Berhasil!')
+            }
+            else if (result.error) {
+                Alert.alert('Kesalahan', result.error)
+            }
+        }
+        else {
+            Alert.alert('Kesalahan', 'Harap Lengkapi Seluruh Form, Terlebih Dahulu.')
         }
     }
     return (
         <Container>
-            <Header style={styles.headerColor}>
+            <Header transparent style={styles.headerColor}>
                 <Left style={{ flex: 1 }} >
                     <Icon name='arrow-back' size={25} color={'white'} onPress={() => navigation.goBack()} />
                 </Left>
@@ -90,14 +124,18 @@ const PelengkapanIdentitas = () => {
                         <View style={{ flex: 1 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Nama Depan</Label>
-                                <Input />
+                                <Input
+                                    value={formData.first_name}
+                                    onChangeText={(val) => dispatch(setIdentiasForm('first_name', val))} />
                             </Item>
                         </View>
                         <View style={{ flex: 0.2 }} />
                         <View style={{ flex: 1 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Nama Belakang</Label>
-                                <Input />
+                                <Input
+                                    value={formData.last_name}
+                                    onChangeText={(val) => dispatch(setIdentiasForm('last_name', val))} />
                             </Item>
                         </View>
                     </View>
@@ -110,6 +148,8 @@ const PelengkapanIdentitas = () => {
                                 placeholder="Pilih Jenis Kelamain"
                                 placeholderStyle={{ color: "#bfc6ea" }}
                                 placeholderIconColor="#007aff"
+                                selectedValue={formData.jenis_kelamin}
+                                onValueChange={(val) => dispatch(setIdentiasForm('jenis_kelamin', val))}
                             >
                                 <Picker.Item label="Laki-Laki" value="L" />
                                 <Picker.Item label="Perempuan" value="P" />
@@ -119,7 +159,7 @@ const PelengkapanIdentitas = () => {
                     <View padder style={{ flexDirection: 'row' }}>
                         <View style={{ flex: 1 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
-                                <Label style={{marginBottom:9}}>Tanggal Lahir</Label>
+                                <Label style={{ marginBottom: 9 }}>Tanggal Lahir</Label>
                                 <DatePicker
                                     defaultDate={new Date()}
                                     locale={"en"}
@@ -131,7 +171,7 @@ const PelengkapanIdentitas = () => {
                                     textStyle={{ color: "green" }}
                                     placeHolderTextStyle={{ color: "#d3d3d3" }}
                                     disabled={false}
-                                    onDateChange={(value) => setDate(value)}
+                                    onDateChange={(value) => dispatch(setIdentiasForm('tanggal_lahir', value))}
                                 >
                                 </DatePicker>
                             </Item>
@@ -140,80 +180,26 @@ const PelengkapanIdentitas = () => {
                         <View style={{ flex: 1.2 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Tempat Lahir</Label>
-                                <Input />
+                                <Input onChangeText={(val) => dispatch(setIdentiasForm('tempat_lahir', val))} />
                             </Item>
                         </View>
                         <View style={{ flex: 0.2 }} />
                         <View style={{ flex: 0.6 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Umur</Label>
-                                <Input />
+                                <Input onChangeText={(val) => dispatch(setIdentiasForm('umur', val))} />
                             </Item>
                         </View>
                     </View>
                     <View padder>
                         <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                             <Label>Alamat</Label>
-                            <Input multiline={true} numberOfLines={3} />
+                            <Input multiline={true} numberOfLines={3} onChangeText={(val) => dispatch(setIdentiasForm('alamat', val))} />
                         </Item>
                     </View>
-                    <View padder style={{ flexDirection: 'row' }}>
-                        <View style={{ flex: 1 }}>
-                            <Label>Provinsi</Label>
-                            <Picker
-                                mode="dropdown"
-                                style={{ width: undefined }}
-                                placeholder="Pilih Jenis Kelamain"
-                                placeholderStyle={{ color: "#bfc6ea" }}
-                                placeholderIconColor="#007aff"
-                            >
-                                <Picker.Item label="Laki-Laki" value="L" />
-                                <Picker.Item label="Perempuan" value="P" />
-                            </Picker>
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <Label>Kabupaten/Kota</Label>
-                            <Picker
-                                mode="dropdown"
-                                style={{ width: undefined }}
-                                placeholder="Pilih Jenis Kelamain"
-                                placeholderStyle={{ color: "#bfc6ea" }}
-                                placeholderIconColor="#007aff"
-                            >
-                                <Picker.Item label="Laki-Laki" value="L" />
-                                <Picker.Item label="Perempuan" value="P" />
-                            </Picker>
-                        </View>
-                    </View>
-                    <View padder style={{ flexDirection: 'row' }}>
-                        <View style={{ flex: 1 }}>
-                            <Label>Kecamatan</Label>
-                            <Picker
-                                mode="dropdown"
-                                style={{ width: undefined }}
-                                placeholder="Pilih Jenis Kelamain"
-                                placeholderStyle={{ color: "#bfc6ea" }}
-                                placeholderIconColor="#007aff"
-                            >
-                                <Picker.Item label="Laki-Laki" value="L" />
-                                <Picker.Item label="Perempuan" value="P" />
-                            </Picker>
-                        </View>
-                        <View style={{ flex: 1 }}>
-                            <Label>Desa</Label>
-                            <Picker
-                                enabled={false}
-                                mode="dropdown"
-                                style={{ width: undefined }}
-                                placeholder="Pilih Jenis Kelamain"
-                                placeholderStyle={{ color: "#bfc6ea" }}
-                                placeholderIconColor="#007aff"
-                            >
-                                <Picker.Item label="Laki-Laki" value="L" />
-                                <Picker.Item label="Perempuan" value="P" />
-                            </Picker>
-                        </View>
-                    </View>
+
+                    <AlamatPicker />
+
                     <View padder>
                         <Item inlineLabel>
                             <Left>
@@ -228,10 +214,13 @@ const PelengkapanIdentitas = () => {
                         </Item>
                     </View>
                     <View>
-                        <Button full>
+                        <Button full
+                            onPress={() => saveButton()}
+                        >
                             <Text>Simpan</Text>
                         </Button>
                     </View>
+
                 </Form>
             </Content>
         </Container >

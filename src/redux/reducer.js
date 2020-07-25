@@ -10,7 +10,9 @@ import {
     SET_NOTIFIKASI,
     SET_EVENTS,
     SET_TOKEN,
-    SET_WELCOME
+    SET_WELCOME,
+    SET_PROVINSI,
+    SET_IDENTITAS_FORM
 } from './actions'
 
 const initialStateLogin = {
@@ -56,6 +58,21 @@ const initialEvents = {
 
 const inititalWelcome = {
     isLoading: true
+}
+
+const initialIdentitasForm = {
+    first_name : '',
+    last_name : '',
+    jenis_kelamin : 'L',
+    tanggal_lahir : '',
+    tempat_lahir : '',
+    umur : '',
+    alamat : '',
+    provinsi : '',
+    kota : '',
+    kecamatan : '',
+    desa : '',
+    foto_diri : ''
 }
 
 const RegisterReducer = (state = initialStateRegister, action) => {
@@ -167,6 +184,28 @@ const EventsReducer = (state = initialEvents, action) => {
     }
 }
 
+const ProvinsiReducer = (state = [], action) => {
+    switch (action.type) {
+        case SET_PROVINSI:
+            return state = action.payload
+        default:
+            return state
+    }
+}
+
+const IdentitasFormReducer = (state = initialIdentitasForm, action) => {
+    switch (action.type) {
+        case SET_IDENTITAS_FORM:
+            return {
+                ...state,
+                [action.form] : action.payload
+            }
+        default:
+            return state
+    }
+}
+
+
 const reducer = combineReducers({
     LoginReducer,
     RegisterReducer,
@@ -175,7 +214,9 @@ const reducer = combineReducers({
     IsSignedReducer,
     NotifikasiReducer,
     EventsReducer,
-    IsWelcomeReducer
+    IsWelcomeReducer,
+    ProvinsiReducer,
+    IdentitasFormReducer
 });
 
 export default reducer

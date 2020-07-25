@@ -16,6 +16,8 @@ export const SET_WELCOME = 'SET_WELCOME';
 
 export const SET_EVENTS = 'SET_EVENTS';
 export const SET_NOTIFIKASI = 'SET_NOTIFIKASI';
+export const SET_PROVINSI = 'SET_PROVINSI';
+export const SET_IDENTITAS_FORM = 'SET_IDENTITAS_FORM';
 
 export const setFormLogin = (inputType, inputValue) => {
     return {
@@ -90,5 +92,20 @@ export const setWelcome = (val) => {
     return {
         type: SET_WELCOME,
         payload: val
+    }
+}
+
+export const setProvinsi = (val) => {
+    return {
+        type: SET_PROVINSI,
+        payload: val
+    }
+}
+
+export const setIdentiasForm = (form, val) => {
+    return {
+        type: SET_IDENTITAS_FORM,
+        payload: val,
+        form: form
     }
 }

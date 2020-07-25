@@ -22,7 +22,6 @@ import { useSelector } from 'react-redux'
 
 const ProsesPendaftaranScreen = ({ navigation }) => {
     const userState = useSelector((state) => state.UserReducer)
-
     const StatusSiswa = () => {
         switch (userState.status) {
             case 0:
@@ -124,11 +123,25 @@ const ProsesPendaftaranScreen = ({ navigation }) => {
                 box4 = styles.boxPrimary
                 break;
         }
+        const navigateToScreen = (val) => {
+            if (val === 'identitas'){
+                navigation.navigate('PelengkapanIdentitasScreen')
+            }
+            else if (val === 'berkas'){
+                navigation.navigate('PelengkapanBerkasScreen')
+            }
+            else if (val === 'pengajuan'){
+                navigation.navigate('PengajuanScreen')
+            }
+            else if (val === 'daftar_ulang'){
+                navigation.navigate('PelengkapanIdentitasScreen')
+            }
+        }
         return (
             <>
                 <TouchableOpacity
                     activeOpacity={0.8}
-                    onPress={() => console.log('2')}
+                    onPress={() => navigateToScreen('identitas')}
                     style={box1}
                 >
                     <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
@@ -140,7 +153,7 @@ const ProsesPendaftaranScreen = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     activeOpacity={0.8}
-                    onPress={() => console.log('2')}
+                    onPress={() => navigateToScreen('berkas')}
                     style={box2}
                 >
                     <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
@@ -152,7 +165,7 @@ const ProsesPendaftaranScreen = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     activeOpacity={0.8}
-                    onPress={() => console.log('2')}
+                    onPress={() => navigateToScreen('pengajuan')}
                     style={box3}
                 >
                     <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>

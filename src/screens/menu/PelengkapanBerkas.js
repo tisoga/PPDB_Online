@@ -25,7 +25,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons'
 import DocumentPicker from 'react-native-document-picker'
 
-const PelengkapanBerkas = () => {
+const PelengkapanBerkas = ({ navigation }) => {
     const [foto, setFoto] = useState('')
     const [date, setDate] = useState({ chosenDate: '' })
     const [fileName, setFileName] = useState('')
@@ -64,7 +64,7 @@ const PelengkapanBerkas = () => {
     }
     return (
         <Container>
-            <Header style={styles.headerColor}>
+            <Header transparent style={styles.headerColor}>
                 <Left style={{ flex: 1 }} >
                     <Icon name='arrow-back' size={25} color={'white'} onPress={() => navigation.goBack()} />
                 </Left>
@@ -131,7 +131,7 @@ const PelengkapanBerkas = () => {
                                 </Button>
                             </Right>
                         </Item>
-                        <Item inlineLabel style={{marginTop: 5}}>
+                        <Item inlineLabel style={{ marginTop: 5 }}>
                             <Left>
                                 <Label>Akta Kelahiran</Label>
                                 <Text>{fileName}</Text>
@@ -142,7 +142,7 @@ const PelengkapanBerkas = () => {
                                 </Button>
                             </Right>
                         </Item>
-                        <Item inlineLabel style={{marginTop: 5}}>
+                        <Item inlineLabel style={{ marginTop: 5 }}>
                             <Left>
                                 <Label>Surat Kesehatan</Label>
                                 <Text>{fileName}</Text>

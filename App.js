@@ -3,7 +3,8 @@ import { NavigationContainer } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { SplashScreen } from './src/screens/authentication'
 import { HomeNavigation, AuthNavigation } from './src/route';
-import { HomeScreen, ProsesPendaftaranScreen, ProfileScreen, PelengkapanIdentitasScreen, PelengkapanBerkas } from './src/screens/menu';
+import SandBox from './src/screens/SandBox';
+import { PelengkapanIdentitasScreen } from './src/screens/menu';
 
 const App: () => React$Node = () => {
     const [isLoading, setLoading] = useState(true)

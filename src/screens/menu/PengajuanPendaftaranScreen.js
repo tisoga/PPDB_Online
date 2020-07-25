@@ -7,7 +7,6 @@ import {
     Container,
     Left,
     Body,
-    Right,
     Title,
     Content,
     H3,
@@ -17,75 +16,85 @@ import {
     Item,
     Label,
     Input,
-    Picker,
     Button,
-    DatePicker
 } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
-import DocumentPicker from 'react-native-document-picker'
 
-const PelengkapanBerkas = () => {
-    const [foto, setFoto] = useState('')
-    const [date, setDate] = useState({ chosenDate: '' })
-    const [fileName, setFileName] = useState('')
-
-    const selectFotoDiri = async () => {
-        try {
-            const res = await DocumentPicker.pick({
-                type: [DocumentPicker.types.allFiles],
-                //There can me more options as well
-                // DocumentPicker.types.allFiles
-                // DocumentPicker.types.images
-                // DocumentPicker.types.plainText
-                // DocumentPicker.types.audio
-                // DocumentPicker.types.pdf
-            });
-            //Printing the log realted to the file
-            console.log('res : ' + JSON.stringify(res));
-            console.log('URI : ' + res.uri);
-            console.log('Type : ' + res.type);
-            console.log('File Name : ' + res.name);
-            console.log('File Size : ' + res.size);
-            //Setting the state to show single file attributes
-            setFoto(res)
-            setFileName(res.name)
-        } catch (err) {
-            //Handling any exception (If any)
-            if (DocumentPicker.isCancel(err)) {
-                //If user canceled the document selection
-                alert('Canceled from single doc picker');
-            } else {
-                //For Unknown Error
-                alert('Unknown Error: ' + JSON.stringify(err));
-                throw err;
-            }
-        }
-    }
+const PengajuanPendaftaran = ({ navigation }) => {
     return (
         <Container>
-            <Header style={styles.headerColor}>
+            <Header transparent style={styles.headerColor}>
                 <Left style={{ flex: 1 }} >
                     <Icon name='arrow-back' size={25} color={'white'} onPress={() => navigation.goBack()} />
                 </Left>
                 <Body style={{ flex: 12 }}>
-                    <Title style={{ alignSelf: 'center' }}>Proses Pendaftaran</Title>
+                    <Title style={{ alignSelf: 'center' }}>Pengajuan Pendaftaran</Title>
                 </Body>
             </Header>
             <Content>
                 <View padder style={[styles.headerColor, { height: 200 }]}>
-                    <H3 style={{ marginTop: 35, color: 'white' }}>Pelengkapan Berkas-Berkas</H3>
+                    <H3 style={{ marginTop: 26, color: 'white' }}>Pengajuan Pendaftaran</H3>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
-                        <Icon name='document' size={100} color={'white'} style={{ marginTop: 10 }} />
+                        <Icon name='clipboard' size={100} color={'white'} style={{ marginTop: 10 }} />
                         <View style={{ flex: 1, marginTop: 10 }}>
                             <Text style={styles.penjelasanText}>
-                                Pada proses ini, Calon siswa  melengkapi berkas-berkas yang diperlukan, sebagai
-                                syarat PPDB Online.
+                                Pada proses ini, calon siswa diharapkan kembali mencheck kembali identitas diri
+                                dan berkas-berkas. jika sudah silahkan memilih jalur pendaftaran.
                             </Text>
                         </View>
                     </View>
                 </View>
                 <Form>
+                    <View padder style={{ flexDirection: 'row' }}>
+                        <View style={{ flex: 1 }}>
+                            <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
+                                <Label>Nama Depan</Label>
+                                <Input multiline={true} numberOfLines={2} />
+                            </Item>
+                        </View>
+                        <View style={{ flex: 0.2 }} />
+                        <View style={{ flex: 1 }}>
+                            <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
+                                <Label>Nama Belakang</Label>
+                                <Input multiline={true} numberOfLines={2} />
+                            </Item>
+                        </View>
+                    </View>
+                    <View padder>
+                        <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
+                            <Label>Jenis Kelamin</Label>
+                            <Input />
+                        </Item>
+                    </View>
+                    <View padder style={{ flexDirection: 'row' }}>
+                        <View style={{ flex: 1 }}>
+                            <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
+                                <Label>Tanggal Lahir</Label>
+                                <Input />
+                            </Item>
+                        </View>
+                        <View style={{ flex: 0.2 }} />
+                        <View style={{ flex: 1.2 }}>
+                            <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
+                                <Label>Tempat Lahir</Label>
+                                <Input />
+                            </Item>
+                        </View>
+                        <View style={{ flex: 0.2 }} />
+                        <View style={{ flex: 0.6 }}>
+                            <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
+                                <Label>Umur</Label>
+                                <Input />
+                            </Item>
+                        </View>
+                    </View>
+                    <View padder>
+                        <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
+                            <Label>Alamat</Label>
+                            <Input multiline={true} numberOfLines={3} />
+                        </Item>
+                    </View>
                     <View style={{ borderWidth: 1, margin: 10 }}>
                         <H3 style={{ textAlign: 'center', backgroundColor: '#87ceeb' }}>Nilai-Nilai UN</H3>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 14 }}>
@@ -117,50 +126,33 @@ const PelengkapanBerkas = () => {
                             </Item>
                         </View>
                     </View>
-
                     <View style={{ borderWidth: 1, margin: 10 }}>
-                        <H3 style={{ textAlign: 'center', backgroundColor: '#87ceeb' }}>Upload File</H3>
-                        <Item inlineLabel>
-                            <Left>
-                                <Label>Ijazah / SKHUN</Label>
-                                <Text>{fileName}</Text>
-                            </Left>
-                            <Right>
-                                <Button onPress={selectFotoDiri}>
-                                    <Text>Pilih File</Text>
-                                </Button>
-                            </Right>
-                        </Item>
-                        <Item inlineLabel style={{marginTop: 5}}>
-                            <Left>
-                                <Label>Akta Kelahiran</Label>
-                                <Text>{fileName}</Text>
-                            </Left>
-                            <Right>
-                                <Button onPress={selectFotoDiri}>
-                                    <Text>Pilih File</Text>
-                                </Button>
-                            </Right>
-                        </Item>
-                        <Item inlineLabel style={{marginTop: 5}}>
-                            <Left>
-                                <Label>Surat Kesehatan</Label>
-                                <Text>{fileName}</Text>
-                            </Left>
-                            <Right>
-                                <Button onPress={selectFotoDiri}>
-                                    <Text>Pilih File</Text>
-                                </Button>
-                            </Right>
+                        <H3 style={{ textAlign: 'center', backgroundColor: '#87ceeb' }}>Berkas-Berkas</H3>
+                        <Item>
+                            <Button full style={{ flex: 1 }}
+                                onPress={() => navigation.navigate('BerkasScreen')}
+                            >
+                                <Text>Cek Berkas</Text>
+                            </Button>
                         </Item>
                     </View>
-                    <View>
-                        <Button full>
-                            <Text>Simpan</Text>
-                        </Button>
-                    </View>
+                    <View></View>
                 </Form>
             </Content>
+            <View style={{ flexDirection: 'row' }}>
+                <View style={{ flex: 1 }}>
+                    <Button full success>
+                        <Text>Edit</Text>
+                    </Button>
+                </View>
+                <View style={{ flex: 1 }}>
+                    <Button full
+                        onPress={() => navigation.navigate('PilihJalurScreen')}
+                    >
+                        <Text style={{ textAlign: 'center' }}>Pilih Jalur Pendaftaran</Text>
+                    </Button>
+                </View>
+            </View>
         </Container >
     )
 }
@@ -177,4 +169,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PelengkapanBerkas
+export default PengajuanPendaftaran
