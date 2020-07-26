@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import {
     Text,
-    Alert
+    Alert,
+    StyleSheet
 } from 'react-native'
 
 import {
     Picker
 } from '@react-native-community/picker'
-import { View, Label } from 'native-base'
+import { View, Label, Button } from 'native-base'
 import { getProvinsi, getKota, getKecamatan, getDesa } from '../components/apimethod'
-
+import Modal from 'react-native-modal'
 const SandBox = () => {
     const [data, setData] = useState({
         'provinsi': '',
@@ -34,7 +35,7 @@ const SandBox = () => {
     const [dataKabupaten, setDataKabupaten] = useState([])
     const [dataKecamatan, setDataKecamatan] = useState([])
     const [dataDesa, setDataDesa] = useState([])
-
+    const [modal, setModal] = useState(false)
     const takeProvinsi = async () => {
         const result = await getProvinsi()
         if (result.data) {
@@ -195,7 +196,7 @@ const SandBox = () => {
     }
 
     useEffect(() => {
-        takeProvinsi()
+        // takeProvinsi()
     }, [])
 
     return (
@@ -216,8 +217,33 @@ const SandBox = () => {
                     <DesaPicker />
                 </View>
             </View>
+            <Modal isVisible={modal}
+                style={styles.modalView}
+                onBackdropPress={() => setModal(false)}
+            >
+                <View style={{backgroundColor:'white', height:100, justifyContent:'flex-end'}}>
+                    <Button
+                        onPress={() => setModal(false)}
+                    >
+                        <Text>CLose Modal</Text>
+                    </Button>
+                </View>
+            </Modal>
+            <Button
+                onPress={() => setModal(true)}
+            >
+                <Text>Open Modal</Text>
+            </Button>
         </>
     )
 }
+
+const styles = StyleSheet.create({
+    modalView: {
+        backgroundColor: 'transparent',
+        justifyContent: 'flex-end',
+        margin: 0
+    }
+})
 
 export default SandBox
