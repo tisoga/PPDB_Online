@@ -19,13 +19,14 @@ import {
     Input,
     Picker,
     Button,
-    DatePicker
+    DatePicker,
+    Spinner
 } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
 import ImagePicker from 'react-native-image-picker'
 import { useSelector, useDispatch } from 'react-redux'
-import { setIdentiasForm } from '../../redux/actions'
+import { setIdentiasForm, setUserLogin, resetIdentitasForm } from '../../redux/actions'
 import { AlamatPicker } from './form/'
 import { isObjectsEmpty } from '../../components/others'
 import { putMethod } from '../../components/apimethod'
@@ -35,6 +36,7 @@ const PelengkapanIdentitas = ({ navigation }) => {
     const formData = useSelector((state) => state.IdentitasFormReducer)
     const userState = useSelector((state) => state.UserReducer)
     const [fileName, setFileName] = useState('')
+    const [isLoading, setLoading] = useState(false)
     const dispatch = useDispatch()
 
     const selectFotoDiri = async () => {
@@ -51,7 +53,7 @@ const PelengkapanIdentitas = ({ navigation }) => {
             } else {
                 dispatch(setIdentiasForm('foto_diri', {
                     name: response.fileName,
-                    uri: Platform.OS === "android" ? response.uri : response.uri.replace("file://", ""),
+                    uri: response.uri,
                     type: response.type
                 }))
                 setFileName(response.fileName)
@@ -61,6 +63,7 @@ const PelengkapanIdentitas = ({ navigation }) => {
     }
 
     useEffect(() => {
+        dispatch(resetIdentitasForm())
         dispatch(setIdentiasForm('first_name', userState.user.first_name))
         dispatch(setIdentiasForm('last_name', userState.user.last_name))
     }, [])
@@ -68,8 +71,12 @@ const PelengkapanIdentitas = ({ navigation }) => {
     const saveButton = async () => {
         let sendData = new FormData();
         const url = baseUrl + profileUrl
-        // console.log(alamat_lengkap)
-        if (isObjectsEmpty(formData)) {
+        // console.log(formData)
+        if (parseInt(formData.umur) > 21) {
+            Alert.alert('Kesalahan', 'Maaf PPDB Untuk SMA Maximal Umur 21 Tahun.')
+        }
+        else if (isObjectsEmpty(formData)) {
+            setLoading(true)
             const tanggal_lahir = formData.tanggal_lahir.getFullYear() + '-'
                 + formData.tanggal_lahir.getMonth() + '-'
                 + formData.tanggal_lahir.getDate();
@@ -78,15 +85,22 @@ const PelengkapanIdentitas = ({ navigation }) => {
             sendData.append('first_name', formData.first_name);
             sendData.append('last_name', formData.last_name);
             sendData.append('tanggal_lahir', tanggal_lahir);
-            sendData.append('jenis_kelamin', 'L');
+            sendData.append('jenis_kelamin', formData.jenis_kelamin);
             sendData.append('tempat_lahir', formData.tempat_lahir);
             sendData.append('umur', formData.umur);
             sendData.append('alamat', alamat_lengkap);
             sendData.append('foto_diri', formData.foto_diri);
             const result = await putMethod(url, sendData, userState.token)
-            console.log(result)
+            // console.log(result)
             if (result.data) {
-                Alert.alert('Berhasil', 'Pelengkapan Identitas Berhasil!')
+                Alert.alert('Berhasil', 'Pelengkapan Identitas Berhasil!', [
+                    {
+                        text: 'Ya', onPress: () => {
+                            navigation.goBack();
+                            dispatch(setUserLogin(result.data))
+                        }
+                    }
+                ], { cancelable: false })
             }
             else if (result.error) {
                 Alert.alert('Kesalahan', result.error)
@@ -95,6 +109,7 @@ const PelengkapanIdentitas = ({ navigation }) => {
         else {
             Alert.alert('Kesalahan', 'Harap Lengkapi Seluruh Form, Terlebih Dahulu.')
         }
+        setLoading(false)
     }
     return (
         <Container>
@@ -216,8 +231,12 @@ const PelengkapanIdentitas = ({ navigation }) => {
                     <View>
                         <Button full
                             onPress={() => saveButton()}
+                            disabled={isLoading}
                         >
-                            <Text>Simpan</Text>
+                            {isLoading
+                            ? <Spinner color={'white'}/>
+                            : <Text>Simpan</Text>
+                        }
                         </Button>
                     </View>
 

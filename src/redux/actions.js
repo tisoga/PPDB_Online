@@ -17,7 +17,11 @@ export const SET_WELCOME = 'SET_WELCOME';
 export const SET_EVENTS = 'SET_EVENTS';
 export const SET_NOTIFIKASI = 'SET_NOTIFIKASI';
 export const SET_PROVINSI = 'SET_PROVINSI';
+
 export const SET_IDENTITAS_FORM = 'SET_IDENTITAS_FORM';
+export const RESET_IDENTITAS_FORM = 'RESET_IDENTITAS_FORM';
+export const SET_BERKAS_FORM = 'SET_BERKAS_FORM';
+export const RESET_BERKAS_FORM = 'RESET_BERKAS_FORM';
 
 export const setFormLogin = (inputType, inputValue) => {
     return {
@@ -107,5 +111,25 @@ export const setIdentiasForm = (form, val) => {
         type: SET_IDENTITAS_FORM,
         payload: val,
         form: form
+    }
+}
+
+export const resetIdentitasForm = () => {
+    return{
+        type: RESET_IDENTITAS_FORM
+    }
+}
+
+export const setBerkasForm = (form, val) => {
+    return {
+        type: SET_BERKAS_FORM,
+        payload: val,
+        form: form
+    }
+}
+
+export const resetBerkasForm = () => {
+    return{
+        type: RESET_BERKAS_FORM
     }
 }

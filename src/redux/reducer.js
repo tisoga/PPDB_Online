@@ -12,7 +12,10 @@ import {
     SET_TOKEN,
     SET_WELCOME,
     SET_PROVINSI,
-    SET_IDENTITAS_FORM
+    SET_IDENTITAS_FORM,
+    RESET_IDENTITAS_FORM,
+    SET_BERKAS_FORM,
+    RESET_BERKAS_FORM
 } from './actions'
 
 const initialStateLogin = {
@@ -61,18 +64,28 @@ const inititalWelcome = {
 }
 
 const initialIdentitasForm = {
-    first_name : '',
-    last_name : '',
-    jenis_kelamin : 'L',
-    tanggal_lahir : '',
-    tempat_lahir : '',
-    umur : '',
-    alamat : '',
-    provinsi : '',
-    kota : '',
-    kecamatan : '',
-    desa : '',
-    foto_diri : ''
+    first_name: '',
+    last_name: '',
+    jenis_kelamin: 'L',
+    tanggal_lahir: '',
+    tempat_lahir: '',
+    umur: '',
+    alamat: '',
+    provinsi: '',
+    kota: '',
+    kecamatan: '',
+    desa: '',
+    foto_diri: ''
+}
+
+const inititalBerkasForm = {
+    nilai_ipa: '',
+    nilai_matematika: '',
+    nilai_inggris: '',
+    nilai_indonesia: '',
+    berkas_akta: '',
+    berkas_ijazah: '',
+    berkas_kesehatan: ''
 }
 
 const RegisterReducer = (state = initialStateRegister, action) => {
@@ -198,13 +211,28 @@ const IdentitasFormReducer = (state = initialIdentitasForm, action) => {
         case SET_IDENTITAS_FORM:
             return {
                 ...state,
-                [action.form] : action.payload
+                [action.form]: action.payload
             }
+        case RESET_IDENTITAS_FORM:
+            return state = initialIdentitasForm
         default:
             return state
     }
 }
 
+const BerkasFormReducer = (state = inititalBerkasForm, action) => {
+    switch (action.type) {
+        case SET_BERKAS_FORM:
+            return {
+                ...state,
+                [action.form]: action.payload
+            }
+        case RESET_BERKAS_FORM:
+            return state = inititalBerkasForm
+        default:
+            return state
+    }
+}
 
 const reducer = combineReducers({
     LoginReducer,
@@ -216,7 +244,8 @@ const reducer = combineReducers({
     EventsReducer,
     IsWelcomeReducer,
     ProvinsiReducer,
-    IdentitasFormReducer
+    IdentitasFormReducer,
+    BerkasFormReducer
 });
 
 export default reducer

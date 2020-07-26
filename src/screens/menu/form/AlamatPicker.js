@@ -94,18 +94,19 @@ const AlamatPicker = () => {
                 <Picker
                     selectedValue={dataSelected.provinsi}
                     onValueChange={(value, index) => {
-                        let val = dataProvinsi.find((data) => data.id === value)
-                        dispatch(setIdentiasForm('provinsi', val.nama))
-                        setDataSelected({ ...dataSelected, ['provinsi']: value })
-                        takeKabupaten(value)
-                        setPickerEnable({
-                            ...pickerEnable,
-                            ['kabupaten']: true,
-                            ['kecamatan']: false,
-                            ['desa']: false
-                        })
-                    }
-                    }
+                        if (value) {
+                            let val = dataProvinsi.find((data) => data.id === value)
+                            dispatch(setIdentiasForm('provinsi', val.nama))
+                            setDataSelected({ ...dataSelected, ['provinsi']: value })
+                            takeKabupaten(value)
+                            setPickerEnable({
+                                ...pickerEnable,
+                                ['kabupaten']: true,
+                                ['kecamatan']: false,
+                                ['desa']: false
+                            })
+                        }
+                    }}
                 >
                     <Picker.Item label='Silahkan Pilih' value={0} />
                     {dataProvinsi.map((value, index) => {
@@ -123,17 +124,18 @@ const AlamatPicker = () => {
                 <Picker
                     selectedValue={dataSelected.kabupaten}
                     onValueChange={(value, index) => {
-                        let val = dataKabupaten.find((data) => data.id === value)
-                        dispatch(setIdentiasForm('kota', val.nama))
-                        setDataSelected({ ...dataSelected, ['kabupaten']: value })
-                        takeKecamatan(value)
-                        setPickerEnable({
-                            ...pickerEnable,
-                            ['kecamatan']: true,
-                            ['desa']: false
-                        })
-                    }
-                    }
+                        if (value) {
+                            let val = dataKabupaten.find((data) => data.id === value)
+                            dispatch(setIdentiasForm('kota', val.nama))
+                            setDataSelected({ ...dataSelected, ['kabupaten']: value })
+                            takeKecamatan(value)
+                            setPickerEnable({
+                                ...pickerEnable,
+                                ['kecamatan']: true,
+                                ['desa']: false
+                            })
+                        }
+                    }}
                     enabled={pickerEnable.kabupaten}
                 >
                     <Picker.Item label='Silahkan Pilih' value={0} />
@@ -153,16 +155,17 @@ const AlamatPicker = () => {
                 <Picker
                     selectedValue={dataSelected.kecamatan}
                     onValueChange={(value, index) => {
-                        let val = dataKecamatan.find((data) => data.id === value)
-                        dispatch(setIdentiasForm('kecamatan', val.nama))
-                        setDataSelected({ ...dataSelected, ['kecamatan']: value })
-                        takeDesa(value)
-                        setPickerEnable({
-                            ...pickerEnable,
-                            ['desa']: true
-                        })
-                    }
-                    }
+                        if (value) {
+                            let val = dataKecamatan.find((data) => data.id === value)
+                            dispatch(setIdentiasForm('kecamatan', val.nama))
+                            setDataSelected({ ...dataSelected, ['kecamatan']: value })
+                            takeDesa(value)
+                            setPickerEnable({
+                                ...pickerEnable,
+                                ['desa']: true
+                            })
+                        }
+                    }}
                     enabled={pickerEnable.kecamatan}
                 >
                     <Picker.Item label='Silahkan Pilih' value={0} />
@@ -182,12 +185,13 @@ const AlamatPicker = () => {
                 <Picker
                     selectedValue={dataSelected.desa}
                     onValueChange={(value, index) => {
-                        let val = dataDesa.find((data) => data.id === value)
-                        dispatch(setIdentiasForm('desa', val.nama))
-                        setData({ ...data, ['desa']: val })
-                        setDataSelected({ ...dataSelected, ['desa']: value })
-                    }
-                    }
+                        if (value) {
+                            let val = dataDesa.find((data) => data.id === value)
+                            dispatch(setIdentiasForm('desa', val.nama))
+                            setData({ ...data, ['desa']: val })
+                            setDataSelected({ ...dataSelected, ['desa']: value })
+                        }
+                    }}
                     enabled={pickerEnable.desa}
                 >
                     <Picker.Item label='Silahkan Pilih' value={0} />

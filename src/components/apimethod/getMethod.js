@@ -5,9 +5,14 @@ const getMethod = async (url, token) => {
         'Authorization': 'Token ' + token
     }
     try {
-        const result = await axios.get(url, { 'headers': headers })
-        // console.log(result.data)
-        return {'data': result.data}
+        if (token){
+            const result = await axios.get(url, { 'headers': headers })
+            return {'data': result.data}
+        }
+        else{
+            const result = await axios.get(url)
+            return {'data': result.data}
+        }
     }
     catch (error) {
         // console.log(error.response)

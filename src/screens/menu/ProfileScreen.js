@@ -27,7 +27,7 @@ import moment from 'moment'
 import { baseUrl, logoutUrl } from '../../components/url'
 import { postMethod } from '../../components/apimethod'
 import AsyncStorage from '@react-native-community/async-storage'
-import { setIsSigned, setWelcome } from '../../redux/actions'
+import { setIsSigned, setWelcome, resetIdentitasForm } from '../../redux/actions'
 
 const ProfileScreen = ({ navigation }) => {
     const userState = useSelector((state) => state.UserReducer)

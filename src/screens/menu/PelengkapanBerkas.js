@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
-    StyleSheet
+    StyleSheet, Alert
 } from 'react-native'
 import {
     Header,
@@ -17,50 +17,110 @@ import {
     Item,
     Label,
     Input,
-    Picker,
     Button,
-    DatePicker
+    Spinner,
 } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
-import DocumentPicker from 'react-native-document-picker'
+import ImagePicker from 'react-native-image-picker'
+import { useDispatch, useSelector } from 'react-redux'
+import { setBerkasForm, resetBerkasForm, setUserLogin } from '../../redux/actions'
+import { isObjectsEmpty } from '../../components/others'
+import { putMethod } from '../../components/apimethod'
+import { baseUrl, berkasUrl } from '../../components/url'
 
 const PelengkapanBerkas = ({ navigation }) => {
-    const [foto, setFoto] = useState('')
-    const [date, setDate] = useState({ chosenDate: '' })
-    const [fileName, setFileName] = useState('')
+    const [fileName, setFileName] = useState({
+        'kesehatan': '',
+        'ijazah': '',
+        'akta': ''
+    })
+    const [isLoading, setLoading] = useState(false);
+    const dispatch = useDispatch()
+    const formData = useSelector((state) => state.BerkasFormReducer)
+    const userState = useSelector((state) => state.UserReducer)
+    const selectFoto = async (berkas) => {
+        const options = {};
+        ImagePicker.launchImageLibrary(options, response => {
+            // console.log("Response", response);
 
-    const selectFotoDiri = async () => {
-        try {
-            const res = await DocumentPicker.pick({
-                type: [DocumentPicker.types.allFiles],
-                //There can me more options as well
-                // DocumentPicker.types.allFiles
-                // DocumentPicker.types.images
-                // DocumentPicker.types.plainText
-                // DocumentPicker.types.audio
-                // DocumentPicker.types.pdf
-            });
-            //Printing the log realted to the file
-            console.log('res : ' + JSON.stringify(res));
-            console.log('URI : ' + res.uri);
-            console.log('Type : ' + res.type);
-            console.log('File Name : ' + res.name);
-            console.log('File Size : ' + res.size);
-            //Setting the state to show single file attributes
-            setFoto(res)
-            setFileName(res.name)
-        } catch (err) {
-            //Handling any exception (If any)
-            if (DocumentPicker.isCancel(err)) {
-                //If user canceled the document selection
-                alert('Canceled from single doc picker');
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
             } else {
-                //For Unknown Error
-                alert('Unknown Error: ' + JSON.stringify(err));
-                throw err;
+                switch (berkas) {
+                    case 'kesehatan':
+                        setFileName({ ...fileName, kesehatan: response.fileName })
+                        dispatch(setBerkasForm('berkas_kesehatan', {
+                            name: response.fileName,
+                            uri: response.uri,
+                            type: response.type
+                        }))
+                        break;
+                    case 'ijazah':
+                        setFileName({ ...fileName, ijazah: response.fileName })
+                        dispatch(setBerkasForm('berkas_ijazah', {
+                            name: response.fileName,
+                            uri: response.uri,
+                            type: response.type
+                        }))
+                        break;
+                    case 'akta':
+                        setFileName({ ...fileName, akta: response.fileName })
+                        dispatch(setBerkasForm('berkas_akta', {
+                            name: response.fileName,
+                            uri: response.uri,
+                            type: response.type
+                        }))
+                        break;
+                }
+            }
+        });
+    }
+
+    useEffect(() => {
+        dispatch(resetBerkasForm())
+    }, [])
+
+    const saveButton = async () => {
+        if (!Number.isFinite(parseFloat(formData.nilai_matematika) && parseFloat(formData.nilai_indonesia)
+            && parseFloat(formData.nilai_inggris) && parseFloat(formData.nilai_ipa))) {
+            Alert.alert('Kesalahan', 'Harap Masukan angka saja didalam Form Nilai UN')
+        }
+        else if (isObjectsEmpty(formData)) {
+            setLoading(true)
+            const url = baseUrl + berkasUrl
+            let sendData = new FormData();
+            sendData.append('nilai_matematika', parseFloat(formData.nilai_matematika));
+            sendData.append('nilai_indonesia', parseFloat(formData.nilai_indonesia));
+            sendData.append('nilai_ipa', parseFloat(formData.nilai_ipa));
+            sendData.append('nilai_inggris', parseFloat(formData.nilai_inggris));
+            sendData.append('berkas_akta', formData.berkas_akta);
+            sendData.append('berkas_kesehatan', formData.berkas_kesehatan);
+            sendData.append('berkas_ijazah', formData.berkas_ijazah);
+            const result = await putMethod(url, sendData, userState.token)
+            // console.log(result)
+            if (result.data) {
+                Alert.alert('Berhasil', 'Pelengkapan Berkas-Berkas Berhasil!', [
+                    {
+                        text: 'Ya', onPress: () => {
+                            navigation.goBack();
+                            dispatch(setUserLogin(result.data))
+                        }
+                    }
+                ], { cancelable: false })
+            }
+            else if (result.error) {
+                Alert.alert('Kesalahan', result.error)
             }
         }
+        else {
+            Alert.alert('Kesalahan', 'Harap Lengkapi Seluruh Form Terlebih Dahulu.')
+        }
+        setLoading(false)
     }
     return (
         <Container>
@@ -92,13 +152,21 @@ const PelengkapanBerkas = ({ navigation }) => {
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Bahasa Indonesia</Label>
-                                    <Input />
+                                    <Input keyboardType={"numeric"}
+                                        onChangeText={value => {
+                                            dispatch(setBerkasForm('nilai_indonesia', value))
+                                        }}
+                                    />
                                 </View>
                             </Item>
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Bahasa Inggris</Label>
-                                    <Input />
+                                    <Input keyboardType={"numeric"}
+                                        onChangeText={value => {
+                                            dispatch(setBerkasForm('nilai_inggris', value))
+                                        }}
+                                    />
                                 </View>
                             </Item>
                         </View>
@@ -106,13 +174,21 @@ const PelengkapanBerkas = ({ navigation }) => {
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Matematika</Label>
-                                    <Input />
+                                    <Input keyboardType={"numeric"}
+                                        onChangeText={value => {
+                                            dispatch(setBerkasForm('nilai_matematika', value))
+                                        }}
+                                    />
                                 </View>
                             </Item>
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>IPA</Label>
-                                    <Input />
+                                    <Input keyboardType={"numeric"}
+                                        onChangeText={value => {
+                                            dispatch(setBerkasForm('nilai_ipa', value))
+                                        }}
+                                    />
                                 </View>
                             </Item>
                         </View>
@@ -123,10 +199,10 @@ const PelengkapanBerkas = ({ navigation }) => {
                         <Item inlineLabel>
                             <Left>
                                 <Label>Ijazah / SKHUN</Label>
-                                <Text>{fileName}</Text>
+                                <Text>{fileName.ijazah}</Text>
                             </Left>
                             <Right>
-                                <Button onPress={selectFotoDiri}>
+                                <Button onPress={() => selectFoto('ijazah')}>
                                     <Text>Pilih File</Text>
                                 </Button>
                             </Right>
@@ -134,10 +210,10 @@ const PelengkapanBerkas = ({ navigation }) => {
                         <Item inlineLabel style={{ marginTop: 5 }}>
                             <Left>
                                 <Label>Akta Kelahiran</Label>
-                                <Text>{fileName}</Text>
+                                <Text>{fileName.akta}</Text>
                             </Left>
                             <Right>
-                                <Button onPress={selectFotoDiri}>
+                                <Button onPress={() => selectFoto('akta')}>
                                     <Text>Pilih File</Text>
                                 </Button>
                             </Right>
@@ -145,18 +221,24 @@ const PelengkapanBerkas = ({ navigation }) => {
                         <Item inlineLabel style={{ marginTop: 5 }}>
                             <Left>
                                 <Label>Surat Kesehatan</Label>
-                                <Text>{fileName}</Text>
+                                <Text>{fileName.kesehatan}</Text>
                             </Left>
                             <Right>
-                                <Button onPress={selectFotoDiri}>
+                                <Button onPress={() => selectFoto('kesehatan')}>
                                     <Text>Pilih File</Text>
                                 </Button>
                             </Right>
                         </Item>
                     </View>
                     <View>
-                        <Button full>
-                            <Text>Simpan</Text>
+                        <Button full
+                            onPress={saveButton}
+                            disabled={isLoading}
+                        >
+                            {isLoading
+                                ? <Spinner color='white' />
+                                : <Text>Simpan</Text>
+                            }
                         </Button>
                     </View>
                 </Form>

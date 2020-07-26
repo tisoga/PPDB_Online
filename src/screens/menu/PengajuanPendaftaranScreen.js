@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
-    StyleSheet
+    StyleSheet, Alert
 } from 'react-native'
 import {
     Header,
@@ -20,8 +20,36 @@ import {
 } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
+import { useSelector } from 'react-redux'
+import moment from 'moment'
 
 const PengajuanPendaftaran = ({ navigation }) => {
+    const userState = useSelector((state) => state.UserReducer)
+
+    const JenisKelamin = () => {
+        if (useState.jenis_kelamin) {
+            return (
+                <Input value='Laki-Laki' editable={false} />
+            )
+        }
+        else {
+            return (
+                <Input value='Perempuan' editable={false} />
+            )
+        }
+    }
+
+    const TanggalLahir = () => {
+        const newDate = moment(userState.tanggal_lahir).format('DD/MM/YYYY')
+        return (
+            <Input value={newDate} editable={false} />
+        )
+    }
+
+    useEffect(() => {
+        Alert.alert('Perhatian', 'Harap Pastikan Kembali Data-Data Anda Sebelum Mengirimkan Pengajuan. \nDikarenkan Jika Anda Sudah Mengirimkan Pengajuan, Anda Tidak Dapat Merubah Kembali Data Anda.')
+    },[])
+
     return (
         <Container>
             <Header transparent style={styles.headerColor}>
@@ -50,49 +78,59 @@ const PengajuanPendaftaran = ({ navigation }) => {
                         <View style={{ flex: 1 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Nama Depan</Label>
-                                <Input multiline={true} numberOfLines={2} />
+                                <Input multiline={true} numberOfLines={2} value={userState.user.first_name}
+                                    editable={false}
+                                />
                             </Item>
                         </View>
                         <View style={{ flex: 0.2 }} />
                         <View style={{ flex: 1 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Nama Belakang</Label>
-                                <Input multiline={true} numberOfLines={2} />
+                                <Input multiline={true} numberOfLines={2} value={userState.user.last_name}
+                                    editable={false}
+                                />
                             </Item>
                         </View>
                     </View>
                     <View padder>
                         <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                             <Label>Jenis Kelamin</Label>
-                            <Input />
+                            <JenisKelamin />
                         </Item>
                     </View>
                     <View padder style={{ flexDirection: 'row' }}>
                         <View style={{ flex: 1 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Tanggal Lahir</Label>
-                                <Input />
+                                <TanggalLahir />
                             </Item>
                         </View>
                         <View style={{ flex: 0.2 }} />
                         <View style={{ flex: 1.2 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Tempat Lahir</Label>
-                                <Input />
+                                <Input value={userState.tempat_lahir}
+                                    editable={false}
+                                />
                             </Item>
                         </View>
                         <View style={{ flex: 0.2 }} />
                         <View style={{ flex: 0.6 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Umur</Label>
-                                <Input />
+                                <Input value={userState.umur.toString()}
+                                    editable={false}
+                                />
                             </Item>
                         </View>
                     </View>
                     <View padder>
                         <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                             <Label>Alamat</Label>
-                            <Input multiline={true} numberOfLines={3} />
+                            <Input multiline={true} numberOfLines={3} value={userState.alamat}
+                                editable={false}
+                            />
                         </Item>
                     </View>
                     <View style={{ borderWidth: 1, margin: 10 }}>
@@ -101,13 +139,17 @@ const PengajuanPendaftaran = ({ navigation }) => {
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Bahasa Indonesia</Label>
-                                    <Input />
+                                    <Input value={userState.nilai_indonesia.toString()}
+                                        editable={false}
+                                    />
                                 </View>
                             </Item>
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Bahasa Inggris</Label>
-                                    <Input />
+                                    <Input value={userState.nilai_inggris.toString()}
+                                        editable={false}
+                                    />
                                 </View>
                             </Item>
                         </View>
@@ -115,13 +157,17 @@ const PengajuanPendaftaran = ({ navigation }) => {
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Matematika</Label>
-                                    <Input />
+                                    <Input value={userState.nilai_matematika.toString()}
+                                        editable={false}
+                                    />
                                 </View>
                             </Item>
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>IPA</Label>
-                                    <Input />
+                                    <Input value={userState.nilai_ipa.toString()}
+                                        editable={false}
+                                    />
                                 </View>
                             </Item>
                         </View>
