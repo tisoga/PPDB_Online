@@ -14,7 +14,10 @@ import {
     PelengkapanBerkas,
     PengajuanPendaftaranScreen,
     PilihJalurScreen,
-    BerkasScreen
+    BerkasScreen,
+    LihatDokumenScreen,
+    UploadBerkasScreen,
+    EditPengajuanScreen
 } from "../screens/menu";
 import { useSelector } from 'react-redux';
 
@@ -48,6 +51,16 @@ const HomeStackScreen = () => {
                 options={{ headerShown: false }}
             />
             <HomeStack.Screen
+                name='LihatDokumenScreen'
+                component={LihatDokumenScreen}
+                options={{ headerShown: false }}
+            />
+            <HomeStack.Screen
+                name='UploadBerkasScreen'
+                component={UploadBerkasScreen}
+                options={{ headerShown: false }}
+            />
+            <HomeStack.Screen
                 name='PengajuanScreen'
                 component={PengajuanPendaftaranScreen}
                 options={{ headerShown: false }}
@@ -55,6 +68,11 @@ const HomeStackScreen = () => {
             <HomeStack.Screen
                 name='PilihJalurScreen'
                 component={PilihJalurScreen}
+                options={{ headerShown: false }}
+            />
+            <HomeStack.Screen
+                name='EditPengajuanScreen'
+                component={EditPengajuanScreen}
                 options={{ headerShown: false }}
             />
         </HomeStack.Navigator>

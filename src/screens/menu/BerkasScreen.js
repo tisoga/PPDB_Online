@@ -7,24 +7,28 @@ import {
     Container,
     Left,
     Content,
-    H3,
     View,
     Text,
-    Item,
-    Label,
-    Input,
     Button,
     Card,
     CardItem,
-    Body,
-    Right,
     ListItem,
     CheckBox
 } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
+import { useSelector } from 'react-redux'
 
-const BerkasScreen = ({ navigation }) => {
+const BerkasScreen = ({ navigation, route }) => {
+    const userState = useSelector((state) => state.UserReducer)
+    const { edit } = route.params;
+    const [isChecked, setChecked] = useState({
+        fotoDiri: false,
+        akta: false,
+        ijazah: false,
+        kesehatan: false
+    })
+
     return (
         <Container style={{ backgroundColor: '#B7B7B7' }}>
             <Header transparent style={styles.headerColor}>
@@ -48,20 +52,35 @@ const BerkasScreen = ({ navigation }) => {
                             <View style={{ flex: 1 }}>
                                 <Text style={{ fontWeight: 'bold', fontSize: 23 }}>Foto Diri</Text>
                             </View>
-                            <View style={{ flex: 1 }}>
-                                <ListItem>
-                                    <Text style={{ marginRight: 10 }}>Ganti Dokumen</Text>
-                                    <CheckBox checked={true} color="green" />
-                                </ListItem>
-                            </View>
+                            {edit &&
+                                <View style={{ flex: 1 }}>
+                                    <ListItem>
+                                        <Text style={{ marginRight: 10 }}>Ganti Dokumen</Text>
+                                        <CheckBox checked={isChecked.fotoDiri} color="green"
+                                            onPress={() => setChecked({ ...isChecked, ['fotoDiri']: !isChecked.fotoDiri })}
+                                        />
+                                    </ListItem>
+                                </View>
+                            }
                         </CardItem>
                         <CardItem>
-                            <Button full style={{ flex: 1 }} info>
+                            <Button full style={{ flex: 1 }} info
+                                onPress={() => navigation.navigate('LihatDokumenScreen', {
+                                    title: 'Foto Diri',
+                                    berkas: userState.foto_diri
+                                })}
+                            >
                                 <Text>Lihat Dokumen</Text>
                             </Button>
-                            <Button full style={{ flex: 1 }} success>
-                                <Text style={{ textAlign: 'center' }}>Upload Dokumen</Text>
-                            </Button>
+                            {isChecked.fotoDiri &&
+                                <Button full style={{ flex: 1 }} success
+                                    onPress={() => navigation.navigate('UploadBerkasScreen', {
+                                        title: 'Foto Diri'
+                                    })}
+                                >
+                                    <Text style={{ textAlign: 'center' }}>Upload Dokumen</Text>
+                                </Button>
+                            }
                         </CardItem>
                     </Card>
                     <Card>
@@ -69,20 +88,35 @@ const BerkasScreen = ({ navigation }) => {
                             <View style={{ flex: 1 }}>
                                 <Text style={{ fontWeight: 'bold', fontSize: 23 }}>Akta Kelahiran</Text>
                             </View>
-                            <View style={{ flex: 1 }}>
-                                <ListItem>
-                                    <Text style={{ marginRight: 10 }}>Ganti Dokumen</Text>
-                                    <CheckBox checked={true} color="green" />
-                                </ListItem>
-                            </View>
+                            {edit &&
+                                <View style={{ flex: 1 }}>
+                                    <ListItem>
+                                        <Text style={{ marginRight: 10 }}>Ganti Dokumen</Text>
+                                        <CheckBox checked={isChecked.akta} color="green"
+                                            onPress={() => setChecked({ ...isChecked, ['akta']: !isChecked.akta })}
+                                        />
+                                    </ListItem>
+                                </View>
+                            }
                         </CardItem>
                         <CardItem>
-                            <Button full style={{ flex: 1 }} info>
+                            <Button full style={{ flex: 1 }} info
+                                onPress={() => navigation.navigate('LihatDokumenScreen', {
+                                    title: 'Akta Kelahiran',
+                                    berkas: userState.berkas_akta
+                                })}
+                            >
                                 <Text>Lihat Dokumen</Text>
                             </Button>
-                            <Button full style={{ flex: 1 }} success>
-                                <Text style={{ textAlign: 'center' }}>Upload Dokumen</Text>
-                            </Button>
+                            {isChecked.akta &&
+                                <Button full style={{ flex: 1 }} success
+                                    onPress={() => navigation.navigate('UploadBerkasScreen', {
+                                        title: 'Akta Kelahiran'
+                                    })}
+                                >
+                                    <Text style={{ textAlign: 'center' }}>Upload Dokumen</Text>
+                                </Button>
+                            }
                         </CardItem>
                     </Card>
                     <Card>
@@ -90,20 +124,35 @@ const BerkasScreen = ({ navigation }) => {
                             <View style={{ flex: 1 }}>
                                 <Text style={{ fontWeight: 'bold', fontSize: 23 }}>SKHUN / Ijazah</Text>
                             </View>
-                            <View style={{ flex: 1 }}>
-                                <ListItem>
-                                    <Text style={{ marginRight: 10 }}>Ganti Dokumen</Text>
-                                    <CheckBox checked={true} color="green" />
-                                </ListItem>
-                            </View>
+                            {edit &&
+                                <View style={{ flex: 1 }}>
+                                    <ListItem>
+                                        <Text style={{ marginRight: 10 }}>Ganti Dokumen</Text>
+                                        <CheckBox checked={isChecked.ijazah} color="green"
+                                            onPress={() => setChecked({ ...isChecked, ['ijazah']: !isChecked.ijazah })}
+                                        />
+                                    </ListItem>
+                                </View>
+                            }
                         </CardItem>
                         <CardItem>
-                            <Button full style={{ flex: 1 }} info>
+                            <Button full style={{ flex: 1 }} info
+                                onPress={() => navigation.navigate('LihatDokumenScreen', {
+                                    title: 'SKHUN / Ijazah',
+                                    berkas: userState.berkas_ijazah
+                                })}
+                            >
                                 <Text>Lihat Dokumen</Text>
                             </Button>
-                            <Button full style={{ flex: 1 }} success>
-                                <Text style={{ textAlign: 'center' }}>Upload Dokumen</Text>
-                            </Button>
+                            {isChecked.ijazah &&
+                                <Button full style={{ flex: 1 }} success
+                                    onPress={() => navigation.navigate('UploadBerkasScreen', {
+                                        title: 'SKHUN / Ijazah'
+                                    })}
+                                >
+                                    <Text style={{ textAlign: 'center' }}>Upload Dokumen</Text>
+                                </Button>
+                            }
                         </CardItem>
                     </Card>
                     <Card>
@@ -111,20 +160,35 @@ const BerkasScreen = ({ navigation }) => {
                             <View style={{ flex: 1 }}>
                                 <Text style={{ fontWeight: 'bold', fontSize: 23 }}>Surat Kesehatan</Text>
                             </View>
-                            <View style={{ flex: 1 }}>
-                                <ListItem>
-                                    <Text style={{ marginRight: 10 }}>Ganti Dokumen</Text>
-                                    <CheckBox checked={true} color="green" />
-                                </ListItem>
-                            </View>
+                            {edit &&
+                                <View style={{ flex: 1 }}>
+                                    <ListItem>
+                                        <Text style={{ marginRight: 10 }}>Ganti Dokumen</Text>
+                                        <CheckBox checked={isChecked.kesehatan} color="green"
+                                            onPress={() => setChecked({ ...isChecked, ['kesehatan']: !isChecked.kesehatan })}
+                                        />
+                                    </ListItem>
+                                </View>
+                            }
                         </CardItem>
                         <CardItem>
-                            <Button full style={{ flex: 1 }} info>
+                            <Button full style={{ flex: 1 }} info
+                                onPress={() => navigation.navigate('LihatDokumenScreen', {
+                                    title: 'Surat Kesehatan',
+                                    berkas: userState.berkas_kesehatan
+                                })}
+                            >
                                 <Text>Lihat Dokumen</Text>
                             </Button>
-                            <Button full style={{ flex: 1 }} success>
-                                <Text style={{ textAlign: 'center' }}>Upload Dokumen</Text>
-                            </Button>
+                            {isChecked.kesehatan &&
+                                <Button full style={{ flex: 1 }} success
+                                    onPress={() => navigation.navigate('UploadBerkasScreen', {
+                                        title: 'Surat Kesehatan'
+                                    })}
+                                >
+                                    <Text style={{ textAlign: 'center' }}>Upload Dokumen</Text>
+                                </Button>
+                            }
                         </CardItem>
                     </Card>
                 </Content>

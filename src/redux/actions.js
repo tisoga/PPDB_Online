@@ -23,6 +23,9 @@ export const RESET_IDENTITAS_FORM = 'RESET_IDENTITAS_FORM';
 export const SET_BERKAS_FORM = 'SET_BERKAS_FORM';
 export const RESET_BERKAS_FORM = 'RESET_BERKAS_FORM';
 
+export const INITIAL_FORM_PENGAJUAN = 'INITIAL_FORM_PENGAJUAN';
+export const SET_FORM_PENGAJUAN = 'SET_FORM_PENGAJUAN';
+
 export const setFormLogin = (inputType, inputValue) => {
     return {
         type: SET_FORM_LOGIN,
@@ -131,5 +134,20 @@ export const setBerkasForm = (form, val) => {
 export const resetBerkasForm = () => {
     return{
         type: RESET_BERKAS_FORM
+    }
+}
+
+export const setFormPengajuan = (form, val) => {
+    return {
+        type: SET_FORM_PENGAJUAN,
+        payload: val,
+        form: form
+    }
+}
+
+export const initialFormPengajuan = (val) => {
+    return {
+        type: INITIAL_FORM_PENGAJUAN,
+        payload: val,
     }
 }

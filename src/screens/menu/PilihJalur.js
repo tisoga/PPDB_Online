@@ -173,6 +173,9 @@ const PilihJalur = ({ navigation }) => {
             </Header>
             <Modal isVisible={modalData.isVisible}
                 style={styles.viewModal}
+                onBackButtonPress={() => {
+                    setModalData({ ...modalData, ['isVisible']: false });
+                }}
                 onBackdropPress={() => {
                     setModalData({ ...modalData, ['isVisible']: false });
                 }}

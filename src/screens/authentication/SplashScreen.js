@@ -24,7 +24,7 @@ const SplashScreen = ({ setLoading }) => {
     const dispatch = useDispatch()
 
     const checkToken = async () => {
-        console.log(url)
+        // console.log(url)
         const token = await AsyncStorage.getItem('@authToken');
         if (token) {
             const result = await getMethod(url, token)

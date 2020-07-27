@@ -8,7 +8,10 @@ import PelengkapanIdentitasScreen from './PelengkapanIdentitasScreen'
 import PelengkapanBerkas from './PelengkapanBerkas'
 import PengajuanPendaftaranScreen from './PengajuanPendaftaranScreen'
 import BerkasScreen from './BerkasScreen'
+import UploadBerkasScreen from './UploadBerkasScreen'
 import PilihJalurScreen from './PilihJalur'
+import LihatDokumenScreen from './LihatDokumenScreen'
+import EditPengajuanScreen from './EditPengajuanScreen'
 
 
 export {
@@ -22,5 +25,8 @@ export {
     PelengkapanBerkas,
     PengajuanPendaftaranScreen,
     BerkasScreen,
-    PilihJalurScreen
+    UploadBerkasScreen,
+    PilihJalurScreen,
+    LihatDokumenScreen,
+    EditPengajuanScreen
 }

@@ -20,35 +20,34 @@ import {
 } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import moment from 'moment'
-import { initialFormPengajuan } from '../../redux/actions'
 
-const PengajuanPendaftaran = ({ navigation }) => {
-    const userState = useSelector((state) => state.UserReducer)
-    const dispatch = useDispatch()
+const EditPengajuanScreen = ({ navigation }) => {
+    const formData = useSelector((state) => state.PengajuanFormReducer)
+
     const JenisKelamin = () => {
         if (useState.jenis_kelamin) {
             return (
-                <Input value='Laki-Laki' editable={false} />
+                <Input value='Laki-Laki' editable={true} />
             )
         }
         else {
             return (
-                <Input value='Perempuan' editable={false} />
+                <Input value='Perempuan' editable={true} />
             )
         }
     }
 
     const TanggalLahir = () => {
-        const newDate = moment(userState.tanggal_lahir).format('DD/MM/YYYY')
+        const newDate = moment(formData.tanggal_lahir).format('DD/MM/YYYY')
         return (
-            <Input value={newDate} editable={false} />
+            <Input value={newDate} editable={true} />
         )
     }
 
     useEffect(() => {
-        Alert.alert('Perhatian', 'Harap Pastikan Kembali Data-Data Anda Sebelum Mengirimkan Pengajuan. \nDikarenkan Jika Anda Sudah Mengirimkan Pengajuan, Anda Tidak Dapat Merubah Kembali Data Anda.')
+        
     }, [])
 
     return (
@@ -79,8 +78,8 @@ const PengajuanPendaftaran = ({ navigation }) => {
                         <View style={{ flex: 1 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Nama Depan</Label>
-                                <Input multiline={true} numberOfLines={2} value={userState.user.first_name}
-                                    editable={false}
+                                <Input multiline={true} numberOfLines={2} value={formData.user.first_name}
+                                    editable={true}
                                 />
                             </Item>
                         </View>
@@ -88,8 +87,8 @@ const PengajuanPendaftaran = ({ navigation }) => {
                         <View style={{ flex: 1 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Nama Belakang</Label>
-                                <Input multiline={true} numberOfLines={2} value={userState.user.last_name}
-                                    editable={false}
+                                <Input multiline={true} numberOfLines={2} value={formData.user.last_name}
+                                    editable={true}
                                 />
                             </Item>
                         </View>
@@ -111,8 +110,8 @@ const PengajuanPendaftaran = ({ navigation }) => {
                         <View style={{ flex: 1.2 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Tempat Lahir</Label>
-                                <Input value={userState.tempat_lahir}
-                                    editable={false}
+                                <Input value={formData.tempat_lahir}
+                                    editable={true}
                                 />
                             </Item>
                         </View>
@@ -120,8 +119,8 @@ const PengajuanPendaftaran = ({ navigation }) => {
                         <View style={{ flex: 0.6 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Umur</Label>
-                                <Input value={userState.umur.toString()}
-                                    editable={false}
+                                <Input value={formData.umur.toString()}
+                                    editable={true}
                                 />
                             </Item>
                         </View>
@@ -129,8 +128,8 @@ const PengajuanPendaftaran = ({ navigation }) => {
                     <View padder>
                         <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                             <Label>Alamat</Label>
-                            <Input multiline={true} numberOfLines={3} value={userState.alamat}
-                                editable={false}
+                            <Input multiline={true} numberOfLines={3} value={formData.alamat}
+                                editable={true}
                             />
                         </Item>
                     </View>
@@ -140,16 +139,16 @@ const PengajuanPendaftaran = ({ navigation }) => {
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Bahasa Indonesia</Label>
-                                    <Input value={userState.nilai_indonesia.toString()}
-                                        editable={false}
+                                    <Input value={formData.nilai_indonesia.toString()}
+                                        editable={true}
                                     />
                                 </View>
                             </Item>
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Bahasa Inggris</Label>
-                                    <Input value={userState.nilai_inggris.toString()}
-                                        editable={false}
+                                    <Input value={formData.nilai_inggris.toString()}
+                                        editable={true}
                                     />
                                 </View>
                             </Item>
@@ -158,16 +157,16 @@ const PengajuanPendaftaran = ({ navigation }) => {
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Matematika</Label>
-                                    <Input value={userState.nilai_matematika.toString()}
-                                        editable={false}
+                                    <Input value={formData.nilai_matematika.toString()}
+                                        editable={true}
                                     />
                                 </View>
                             </Item>
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>IPA</Label>
-                                    <Input value={userState.nilai_ipa.toString()}
-                                        editable={false}
+                                    <Input value={formData.nilai_ipa.toString()}
+                                        editable={true}
                                     />
                                 </View>
                             </Item>
@@ -178,7 +177,7 @@ const PengajuanPendaftaran = ({ navigation }) => {
                         <Item>
                             <Button full style={{ flex: 1 }}
                                 onPress={() => navigation.navigate('BerkasScreen', {
-                                    edit: false
+                                    edit: true
                                 })}
                             >
                                 <Text>Cek Berkas</Text>
@@ -191,19 +190,9 @@ const PengajuanPendaftaran = ({ navigation }) => {
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
                     <Button full success
-                        onPress={() => {
-                            dispatch(initialFormPengajuan(userState));
-                            navigation.navigate('EditPengajuanScreen');
-                        }}
+                        onPress={() => console.log('Simpan')}
                     >
-                        <Text>Edit</Text>
-                    </Button>
-                </View>
-                <View style={{ flex: 1 }}>
-                    <Button full
-                        onPress={() => navigation.navigate('PilihJalurScreen')}
-                    >
-                        <Text style={{ textAlign: 'center' }}>Pilih Jalur Pendaftaran</Text>
+                        <Text style={{ textAlign: 'center' }}>Simpan</Text>
                     </Button>
                 </View>
             </View>
@@ -223,4 +212,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PengajuanPendaftaran
+export default EditPengajuanScreen
