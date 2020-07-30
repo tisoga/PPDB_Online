@@ -4,7 +4,8 @@ import {
     StyleSheet,
     View,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    Alert
 } from 'react-native'
 
 import {
@@ -20,7 +21,8 @@ import {
     Button,
     Item,
     Label,
-    H3
+    H3,
+    Spinner
 } from 'native-base'
 import { BackgroundJalur } from '../../assets'
 
@@ -29,13 +31,17 @@ import Carousel, { Pagination } from 'react-native-snap-carousel'
 import Modal from 'react-native-modal'
 import ImagePicker from 'react-native-image-picker'
 import { isObjectsEmpty } from '../../components/others'
+import { baseUrl, pengajuanUrl } from '../../components/url'
+import { putMethod, getProfile } from '../../components/apimethod'
+import { useSelector, useDispatch } from 'react-redux'
+import { setUserLogin, setUserToken } from '../../redux/actions'
 
 const src_height = Dimensions.get('window').height
 const data = [
     {
         title: "Zonasi",
         desc: "Jalur Zonasi adalah Jalur Pendaftaran untuk para calon siswa yang berdomisili dalam satu wilayah kabupaten/kota dengan sekolah berasal.",
-        desc2: 'Maaf Anda Tidak Bisa Mengambil Jalur Zonasi, dikarenakan alamat anda tidak satu domisili dengan sekolah ini'
+        desc2: 'Alamat anda harus satu domisli dengan, alamat sekolah ini untuk mengikuti pendaftaran melalui jalur zonasi.'
 
     },
     {
@@ -57,7 +63,12 @@ const data = [
 
 
 const PilihJalur = ({ navigation }) => {
-    const [isVisibleModal, setVisibleModal] = useState(false)
+    const userState = useSelector((state) => state.UserReducer)
+    const sekolahState = useSelector((state) => state.SekolahReducer)
+    const alamat_sekolah = JSON.parse(sekolahState.alamat_lengkap_split.replace(/'/g, '"'))
+    const alamat_siswa = userState.alamat.split(',')[3].trim()
+    const [isLoading, setLoading] = useState(false)
+    const dispatch = useDispatch()
     const [berkas, setBerkas] = useState({
         fileName: '',
         fileUpload: ''
@@ -93,30 +104,75 @@ const PilihJalur = ({ navigation }) => {
     }
 
     const ajukanPendaftaran = async (jalur) => {
+        const url = baseUrl + pengajuanUrl
+        let sendData = new FormData()
+        let verification = false
         switch (jalur) {
             case 'Zonasi':
                 console.log('Jalur Zonasi')
+                sendData.append('status', 10)
+                verification = true
                 break;
             case 'Afirmasi':
                 if (isObjectsEmpty(berkas)) {
                     console.log('Jalur Afirmasi')
+                    sendData.append('status', 11)
+                    sendData.append('berkas_tambahan', berkas.fileUpload)
+                    verification = true
                 }
                 else {
-                    console.log('Tidak Ada File')
+                    Alert.alert('Kesalahan', 'Silahkan Pilih File Terlebih Dahulu.')
                 }
                 break;
             case 'Prestasi':
                 console.log('Jalur Prestasi')
+                if (berkas.fileUpload){
+                    sendData.append('berkas_tambahan', berkas.fileUpload)
+                }
+                sendData.append('status', 13)
+                verification = true
                 break;
             default:
                 if (isObjectsEmpty(berkas)) {
                     console.log('Jalur Perpindahan Orang Tua')
+                    sendData.append('berkas_tambahan', berkas.fileUpload)
+                    sendData.append('status', 12)
+                    verification = true
                 }
                 else {
-                    console.log('Tidak Ada File')
+                    Alert.alert('Kesalahan', 'Silahkan Pilih File Terlebih Dahulu.')
                 }
                 break;
         }
+        if (verification) {
+            if (jalur === 'Zonasi' && alamat_sekolah.kabupaten !== alamat_siswa){
+                Alert.alert('Kesalahan', 'Maaf Anda Tidak dapat Memilih Jalur Zonasi, dikarenkan alamat anda tidak satu domisili dengan sekolah.')
+            }
+            else{
+                // console.log('satu')
+                // console.log(alamat_sekolah.kabupaten)
+                // console.log(alamat_siswa)
+                setLoading(true)
+                const result = await putMethod(url, sendData, userState.token)
+                if (result.data) {
+                    const profile = await getProfile(userState.token)
+                    Alert.alert('Berhasil', 'Pendaftaran melalui Jalur ' + jalur + ' berhasil, Silahkan tunggu hasil dari proses seleksi', [
+                        {
+                            text: 'Ya', onPress: () => {
+                                navigation.navigate('ProsesScreen')
+                                const token = userState.token
+                                dispatch(setUserLogin(profile))
+                                dispatch(setUserToken(token))
+                            }
+                        }
+                    ], { cancelable: false })
+                }
+                else if (result.error) {
+                    Alert.alert('Kesalahan', result.error)
+                }
+            }
+        }
+        setLoading(false)
     }
 
     const JalurCard = ({ item, index }) => {
@@ -208,7 +264,10 @@ const PilihJalur = ({ navigation }) => {
                         <Button full
                             onPress={() => ajukanPendaftaran(data[modalData.indexChoose].title)}
                         >
-                            <Text>Ajukan Pendaftaran</Text>
+                            {isLoading
+                                ? <Spinner color='white' />
+                                : <Text>Ajukan Pendaftaran</Text>
+                            }
                         </Button>
                     </View>
                 </View>

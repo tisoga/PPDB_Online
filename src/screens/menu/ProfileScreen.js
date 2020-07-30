@@ -33,7 +33,7 @@ const ProfileScreen = ({ navigation }) => {
     const userState = useSelector((state) => state.UserReducer)
     const dispatch = useDispatch()
     // console.log(userState)
-    
+
     const ConvertDate = () => {
         if (userState.tanggal_lahir) {
             newDate = moment(userState.tanggal_lahir).format('DD/MM/YYYY')
@@ -82,6 +82,31 @@ const ProfileScreen = ({ navigation }) => {
             )
         }
     }
+
+    const StatusPendaftaran = () => {
+        let jalur = ''
+        switch (userState.status) {
+            case 10:
+                jalur = 'Jalur Zonasi'
+                break;
+            case 11:
+                jalur = 'Jalur Afirmasi'
+                break
+            case 12:
+                jalur = 'Jalur Perpindahan Orang Tua'
+                break
+            case 13:
+                jalur = 'Jalur Prestasi'
+                break
+            default:
+                jalur = 'Belum dipilih'
+                break;
+        }
+        return (
+            <H3>{jalur}</H3>
+        )
+    }
+
     const logoutUser = async () => {
         const url = baseUrl + logoutUrl
         const result = await postMethod(url, '', userState.token)
@@ -158,12 +183,12 @@ const ProfileScreen = ({ navigation }) => {
                                 <Text>:</Text>
                             </View>
                             <View style={styles.viewRight}>
-                                <H3>Belum dipilih</H3>
+                                <StatusPendaftaran />
                             </View>
                         </View>
                         <ListItem itemDivider style={{ marginTop: 10 }} />
                         <List>
-                            <ListItem onPress={() => console.log('1')}>
+                            {/* <ListItem onPress={() => console.log('1')}>
                                 <Left>
                                     <Icon name='key' size={20} color={'tomato'} />
                                     <Text style={styles.textLeft}>Ganti Password</Text>
@@ -171,7 +196,7 @@ const ProfileScreen = ({ navigation }) => {
                                 <Right>
                                     <Icon name='arrow-forward' size={20} color={'tomato'} />
                                 </Right>
-                            </ListItem>
+                            </ListItem> */}
                             <ListItem onPress={logout}>
                                 <Left>
                                     <Icon name='log-out' size={20} color={'tomato'} />

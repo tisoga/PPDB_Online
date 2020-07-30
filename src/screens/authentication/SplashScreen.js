@@ -13,10 +13,10 @@ import {
 } from 'native-base';
 
 import { Background, Logo } from '../../assets';
-import { getMethod } from '../../components/apimethod';
+import { getMethod, getProfile, getSekolah } from '../../components/apimethod';
 import { baseUrl, profileUrl } from '../../components/url';
 import { useDispatch } from 'react-redux';
-import { setUserLogin, setIsSigned, setUserToken } from '../../redux/actions';
+import { setUserLogin, setIsSigned, setUserToken, setFormSekolah } from '../../redux/actions';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const SplashScreen = ({ setLoading }) => {
@@ -27,6 +27,7 @@ const SplashScreen = ({ setLoading }) => {
         // console.log(url)
         const token = await AsyncStorage.getItem('@authToken');
         if (token) {
+            // console.log(await getProfile(token))
             const result = await getMethod(url, token)
             if (result.data) {
                 dispatch(setIsSigned(true))

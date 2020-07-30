@@ -18,11 +18,7 @@ import { baseUrl } from '../../components/url'
 const LihatDokumenScreen = ({ route, navigation }) => {
     const { title, berkas } = route.params;
     return (
-        <ImageBackground
-            source={{ uri: baseUrl + berkas }}
-            style={styles.imageBackground}
-            imageStyle={{ resizeMode: 'stretch' }}
-        >
+        <>
             <Header style={{ marginTop: 20, backgroundColor: '#87ceeb' }}>
                 <Left style={{ flex: 1 }} >
                     <Icon name='arrow-back' size={25} color={'white'} onPress={() => navigation.goBack()} />
@@ -31,7 +27,13 @@ const LihatDokumenScreen = ({ route, navigation }) => {
                     <Title style={{ alignSelf: 'center' }}>{title}</Title>
                 </Body>
             </Header>
-        </ImageBackground>
+            <ImageBackground
+                source={{ uri: baseUrl + berkas }}
+                style={styles.imageBackground}
+                imageStyle={{ resizeMode: 'stretch' }}
+            >
+            </ImageBackground>
+        </>
     )
 }
 

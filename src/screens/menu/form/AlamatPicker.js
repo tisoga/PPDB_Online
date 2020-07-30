@@ -9,10 +9,10 @@ import {
 } from '@react-native-community/picker'
 import { View, Label } from 'native-base'
 import { getProvinsi, getKota, getKecamatan, getDesa } from '../../../components/apimethod'
-import { setIdentiasForm } from '../../../redux/actions'
+import { setIdentiasForm, setFormPengajuan } from '../../../redux/actions'
 import { useDispatch } from 'react-redux'
 
-const AlamatPicker = () => {
+const AlamatPicker = ({ screen }) => {
     const dispatch = useDispatch()
     const [data, setData] = useState({
         'provinsi': '',
@@ -96,7 +96,12 @@ const AlamatPicker = () => {
                     onValueChange={(value, index) => {
                         if (value) {
                             let val = dataProvinsi.find((data) => data.id === value)
-                            dispatch(setIdentiasForm('provinsi', val.nama))
+                            if (screen === 'identitas'){
+                                dispatch(setIdentiasForm('provinsi', val.nama))
+                            }
+                            else if (screen = 'pengajuan'){
+                                dispatch(setFormPengajuan('provinsi', val.nama))
+                            }
                             setDataSelected({ ...dataSelected, ['provinsi']: value })
                             takeKabupaten(value)
                             setPickerEnable({
@@ -126,7 +131,12 @@ const AlamatPicker = () => {
                     onValueChange={(value, index) => {
                         if (value) {
                             let val = dataKabupaten.find((data) => data.id === value)
-                            dispatch(setIdentiasForm('kota', val.nama))
+                            if (screen === 'identitas'){
+                                dispatch(setIdentiasForm('kota', val.nama))
+                            }
+                            else if (screen = 'pengajuan'){
+                                dispatch(setFormPengajuan('kota', val.nama))
+                            }
                             setDataSelected({ ...dataSelected, ['kabupaten']: value })
                             takeKecamatan(value)
                             setPickerEnable({
@@ -157,7 +167,12 @@ const AlamatPicker = () => {
                     onValueChange={(value, index) => {
                         if (value) {
                             let val = dataKecamatan.find((data) => data.id === value)
-                            dispatch(setIdentiasForm('kecamatan', val.nama))
+                            if (screen === 'identitas'){
+                                dispatch(setIdentiasForm('kecamatan', val.nama))
+                            }
+                            else if (screen = 'pengajuan'){
+                                dispatch(setFormPengajuan('kecamatan', val.nama))
+                            }
                             setDataSelected({ ...dataSelected, ['kecamatan']: value })
                             takeDesa(value)
                             setPickerEnable({
@@ -187,7 +202,12 @@ const AlamatPicker = () => {
                     onValueChange={(value, index) => {
                         if (value) {
                             let val = dataDesa.find((data) => data.id === value)
-                            dispatch(setIdentiasForm('desa', val.nama))
+                            if (screen === 'identitas'){
+                                dispatch(setIdentiasForm('desa', val.nama))
+                            }
+                            else if (screen = 'pengajuan'){
+                                dispatch(setFormPengajuan('desa', val.nama))
+                            }
                             setData({ ...data, ['desa']: val })
                             setDataSelected({ ...dataSelected, ['desa']: value })
                         }

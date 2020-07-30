@@ -24,9 +24,9 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons'
 import ImagePicker from 'react-native-image-picker'
 import { useDispatch, useSelector } from 'react-redux'
-import { setBerkasForm, resetBerkasForm, setUserLogin } from '../../redux/actions'
+import { setBerkasForm, resetBerkasForm, setUserLogin, setUserToken } from '../../redux/actions'
 import { isObjectsEmpty } from '../../components/others'
-import { putMethod } from '../../components/apimethod'
+import { putMethod, getProfile } from '../../components/apimethod'
 import { baseUrl, berkasUrl } from '../../components/url'
 
 const PelengkapanBerkas = ({ navigation }) => {
@@ -104,11 +104,14 @@ const PelengkapanBerkas = ({ navigation }) => {
             const result = await putMethod(url, sendData, userState.token)
             // console.log(result)
             if (result.data) {
+                const profile = await getProfile(userState.token)
                 Alert.alert('Berhasil', 'Pelengkapan Berkas-Berkas Berhasil!', [
                     {
-                        text: 'Ya', onPress: () => {
+                        text: 'Ya', onPress: async () => {
                             navigation.goBack();
-                            dispatch(setUserLogin(result.data))
+                            const token = userState.token
+                            dispatch(setUserLogin(profile))
+                            dispatch(setUserToken(token))
                         }
                     }
                 ], { cancelable: false })

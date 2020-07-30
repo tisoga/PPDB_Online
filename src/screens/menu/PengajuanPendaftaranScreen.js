@@ -22,13 +22,13 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons'
 import { useSelector, useDispatch } from 'react-redux'
 import moment from 'moment'
-import { initialFormPengajuan } from '../../redux/actions'
+import { initialFormPengajuan, setFormPengajuan } from '../../redux/actions'
 
 const PengajuanPendaftaran = ({ navigation }) => {
     const userState = useSelector((state) => state.UserReducer)
     const dispatch = useDispatch()
     const JenisKelamin = () => {
-        if (useState.jenis_kelamin) {
+        if (userState.jenis_kelamin === 'L') {
             return (
                 <Input value='Laki-Laki' editable={false} />
             )
@@ -39,7 +39,6 @@ const PengajuanPendaftaran = ({ navigation }) => {
             )
         }
     }
-
     const TanggalLahir = () => {
         const newDate = moment(userState.tanggal_lahir).format('DD/MM/YYYY')
         return (
@@ -192,11 +191,14 @@ const PengajuanPendaftaran = ({ navigation }) => {
                 <View style={{ flex: 1 }}>
                     <Button full success
                         onPress={() => {
+                            console.log('edit')
                             dispatch(initialFormPengajuan(userState));
+                            dispatch(setFormPengajuan('first_name', userState.user.first_name))
+                            dispatch(setFormPengajuan('last_name', userState.user.last_name))
                             navigation.navigate('EditPengajuanScreen');
                         }}
                     >
-                        <Text>Edit</Text>
+                        <Text>Edit Data Diri</Text>
                     </Button>
                 </View>
                 <View style={{ flex: 1 }}>

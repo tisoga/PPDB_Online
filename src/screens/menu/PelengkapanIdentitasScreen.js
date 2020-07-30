@@ -26,7 +26,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons'
 import ImagePicker from 'react-native-image-picker'
 import { useSelector, useDispatch } from 'react-redux'
-import { setIdentiasForm, setUserLogin, resetIdentitasForm } from '../../redux/actions'
+import { setIdentiasForm, setUserLogin, resetIdentitasForm, setUserToken } from '../../redux/actions'
 import { AlamatPicker } from './form/'
 import { isObjectsEmpty } from '../../components/others'
 import { putMethod } from '../../components/apimethod'
@@ -80,8 +80,8 @@ const PelengkapanIdentitas = ({ navigation }) => {
             const tanggal_lahir = formData.tanggal_lahir.getFullYear() + '-'
                 + formData.tanggal_lahir.getMonth() + '-'
                 + formData.tanggal_lahir.getDate();
-            const alamat_lengkap = formData.alamat + ', ' + formData.provinsi + ', ' + formData.kota + ', ' +
-                formData.kecamatan + ', ' + formData.desa;
+            const alamat_lengkap = formData.alamat + ', ' + formData.desa + ', ' + formData.kecamatan + ', ' +
+                formData.kota + ', ' + formData.provinsi;
             sendData.append('first_name', formData.first_name);
             sendData.append('last_name', formData.last_name);
             sendData.append('tanggal_lahir', tanggal_lahir);
@@ -97,7 +97,9 @@ const PelengkapanIdentitas = ({ navigation }) => {
                     {
                         text: 'Ya', onPress: () => {
                             navigation.goBack();
+                            const token = userState.token
                             dispatch(setUserLogin(result.data))
+                            dispatch(setUserToken(token))
                         }
                     }
                 ], { cancelable: false })
@@ -213,7 +215,7 @@ const PelengkapanIdentitas = ({ navigation }) => {
                         </Item>
                     </View>
 
-                    <AlamatPicker />
+                    <AlamatPicker screen='identitas' />
 
                     <View padder>
                         <Item inlineLabel>

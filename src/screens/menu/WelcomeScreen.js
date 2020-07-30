@@ -15,10 +15,10 @@ import {
 } from 'native-base';
 
 import { Background2, Logo } from '../../assets';
-import { getMethod } from '../../components/apimethod';
+import { getMethod, getSekolah } from '../../components/apimethod';
 import { baseUrl, notifikasiUrl, eventsUrl, profileUrl } from '../../components/url';
 import { useDispatch, useSelector } from 'react-redux';
-import { setNotifikasi, setEvents, setWelcome, setUserLogin, setUserToken } from '../../redux/actions';
+import { setNotifikasi, setEvents, setWelcome, setUserLogin, setUserToken, setFormSekolah } from '../../redux/actions';
 
 const WelcomeScreen = () => {
     const userState = useSelector((state) => state.UserReducer)
@@ -39,6 +39,17 @@ const WelcomeScreen = () => {
             Alert.alert('Kesalahan', result.error)
         }
 
+    }
+
+    const getInfoSekolah = async () => {
+        const result = await getSekolah()
+        // console.log(result.data)
+        if (result.data) {
+            dispatch(setFormSekolah(result.data))
+        }
+        else if (result.error) {
+            Alert.alert('Kesalahan', result.error)
+        }
     }
 
     const getNotifikasi = async () => {
@@ -69,6 +80,7 @@ const WelcomeScreen = () => {
         getProfile()
         getNotifikasi()
         getEvents()
+        getInfoSekolah()
     }
 
     useEffect(() => {

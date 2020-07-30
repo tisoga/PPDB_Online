@@ -1,24 +1,24 @@
 import axios from 'axios'
 
-const putMethod = async (url, formData = null, token = null) => {
+const patchMethod = async (url, formData = null, token = null) => {
     // console.log(url)
-    // console.log(formData)
+    console.log(formData)
     // console.log(token)
     const headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Token ' + token
     }
     try {
-        const result = await axios.put(url, formData, { 'headers': headers })
+        const result = await axios.patch(url, formData, { 'headers': headers })
         return { 'data': result.data }
     }
     catch (error) {
         console.log(error.request)
         if (error.response) {
-            // console.log(error.response)
+            console.log(error.response)
             switch (error.response.status) {
                 case 400:
-                    return { 'error': Object.values(error.response.data)[0] }
+                    return { 'error': Object.values(error.response.data)[0][0] }
                 default:
                     return { 'error': 'Terjadi Kesalahan' }
             }
@@ -32,4 +32,4 @@ const putMethod = async (url, formData = null, token = null) => {
     }
 }
 
-export default putMethod
+export default patchMethod

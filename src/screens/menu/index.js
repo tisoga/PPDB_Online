@@ -12,6 +12,8 @@ import UploadBerkasScreen from './UploadBerkasScreen'
 import PilihJalurScreen from './PilihJalur'
 import LihatDokumenScreen from './LihatDokumenScreen'
 import EditPengajuanScreen from './EditPengajuanScreen'
+import DaftarUlangScreen from './DaftarUlang'
+import CekKuotaScreen from './CekKuotaScreen'
 
 
 export {
@@ -28,5 +30,7 @@ export {
     UploadBerkasScreen,
     PilihJalurScreen,
     LihatDokumenScreen,
-    EditPengajuanScreen
+    EditPengajuanScreen,
+    DaftarUlangScreen,
+    CekKuotaScreen
 }

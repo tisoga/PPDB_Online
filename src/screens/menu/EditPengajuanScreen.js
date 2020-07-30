@@ -17,37 +17,93 @@ import {
     Label,
     Input,
     Button,
+    Picker,
+    DatePicker,
+    Spinner
 } from 'native-base'
 
 import Icon from 'react-native-vector-icons/Ionicons'
-import { useSelector } from 'react-redux'
-import moment from 'moment'
+import { useSelector, useDispatch } from 'react-redux'
+import { setFormPengajuan, setUserLogin, setUserToken } from '../../redux/actions'
+import { AlamatPicker } from './form'
+import { isObjectsEmpty, nilaiValidation } from '../../components/others'
+import { patchMethod } from '../../components/apimethod'
+import { baseUrl, pengajuanUrl } from '../../components/url'
 
 const EditPengajuanScreen = ({ navigation }) => {
+    const userState = useSelector((state) => state.UserReducer)
     const formData = useSelector((state) => state.PengajuanFormReducer)
+    const [isLoading, setLoading] = useState(false)
+    const [alamat, setAlamat] = useState()
+    const dispatch = useDispatch()
 
-    const JenisKelamin = () => {
-        if (useState.jenis_kelamin) {
-            return (
-                <Input value='Laki-Laki' editable={true} />
-            )
+    const saveButton = async () => {
+        let sendData = new FormData();
+        const url = baseUrl + pengajuanUrl
+        delete formData['asal_sekolah']
+        delete formData['berkas_tambahan']
+        if (!Number.isFinite(parseFloat(formData.nilai_matematika) && parseFloat(formData.nilai_indonesia)
+            && parseFloat(formData.nilai_inggris) && parseFloat(formData.nilai_ipa))) {
+            Alert.alert('Kesalahan', 'Harap Masukan angka saja didalam Form Nilai UN')
+        }
+        else if (!nilaiValidation(formData.nilai_indonesia, formData.nilai_matematika,
+            formData.nilai_inggris, formData.nilai_ipa)) {
+            Alert.alert('Kesalahan', 'Angka untuk Nilai UN Tidak boleh lebih dari 100 atau kurang dari 0')
+        }
+        else if (isObjectsEmpty(formData)) {
+            setLoading(true)
+            const tanggal_lahir = formData.tanggal_lahir.getFullYear() + '-'
+                + formData.tanggal_lahir.getMonth() + '-'
+                + formData.tanggal_lahir.getDate();
+            const alamat_lengkap = formData.alamat + ', ' + formData.desa + ', ' + formData.kecamatan + ', ' +
+                formData.kota + ', ' + formData.provinsi;
+            sendData.append('first_name', formData.first_name);
+            sendData.append('last_name', formData.last_name);
+            sendData.append('tanggal_lahir', tanggal_lahir);
+            sendData.append('jenis_kelamin', formData.jenis_kelamin);
+            sendData.append('tempat_lahir', formData.tempat_lahir);
+            sendData.append('umur', formData.umur);
+            sendData.append('alamat', alamat_lengkap);
+            sendData.append('nilai_indonesia', parseFloat(formData.nilai_indonesia));
+            sendData.append('nilai_matematika', parseFloat(formData.nilai_matematika));
+            sendData.append('nilai_ipa', parseFloat(formData.nilai_ipa));
+            sendData.append('nilai_inggris', parseFloat(formData.nilai_inggris));
+            const result = await patchMethod(url, sendData, userState.token)
+            // console.log(result)
+            if (result.data) {
+                Alert.alert('Berhasil', 'Perubahan Identitas Berhasil!', [
+                    {
+                        text: 'Ya', onPress: () => {
+                            navigation.goBack();
+                            const token = userState.token
+                            dispatch(setUserLogin(result.data))
+                            dispatch(setUserToken(token))
+                        }
+                    }
+                ], { cancelable: false })
+            }
+            else if (result.error) {
+                Alert.alert('Kesalahan', result.error)
+            }
+            else {
+                Alert.alert('Kesalahan', 'Harap Lengkapi Seluruh Form, Terlebih Dahulu.')
+            }
+            setLoading(false)
         }
         else {
-            return (
-                <Input value='Perempuan' editable={true} />
-            )
+            Alert.alert('Kesalahan', 'Harap Lengkapi Seluruh Form Terlebih Dahulu.')
         }
     }
 
-    const TanggalLahir = () => {
-        const newDate = moment(formData.tanggal_lahir).format('DD/MM/YYYY')
-        return (
-            <Input value={newDate} editable={true} />
-        )
-    }
 
     useEffect(() => {
-        
+        dispatch(setFormPengajuan('provinsi', ''))
+        dispatch(setFormPengajuan('kota', ''))
+        dispatch(setFormPengajuan('kecamatan', ''))
+        dispatch(setFormPengajuan('desa', ''))
+        dispatch(setFormPengajuan('tanggal_lahir', ''))
+        const split_alamat = formData.alamat.split(',')
+        dispatch(setFormPengajuan('alamat', split_alamat[0]))
     }, [])
 
     return (
@@ -78,8 +134,8 @@ const EditPengajuanScreen = ({ navigation }) => {
                         <View style={{ flex: 1 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Nama Depan</Label>
-                                <Input multiline={true} numberOfLines={2} value={formData.user.first_name}
-                                    editable={true}
+                                <Input multiline={true} numberOfLines={2} value={formData.first_name}
+                                    onChangeText={(val) => dispatch(setFormPengajuan('first_name', val))}
                                 />
                             </Item>
                         </View>
@@ -87,8 +143,8 @@ const EditPengajuanScreen = ({ navigation }) => {
                         <View style={{ flex: 1 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Nama Belakang</Label>
-                                <Input multiline={true} numberOfLines={2} value={formData.user.last_name}
-                                    editable={true}
+                                <Input multiline={true} numberOfLines={2} value={formData.last_name}
+                                    onChangeText={(val) => dispatch(setFormPengajuan('last_name', val))}
                                 />
                             </Item>
                         </View>
@@ -96,14 +152,42 @@ const EditPengajuanScreen = ({ navigation }) => {
                     <View padder>
                         <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                             <Label>Jenis Kelamin</Label>
-                            <JenisKelamin />
+                            <Item style={{ borderBottomColor: '#24d169' }} picker>
+                                <Picker
+                                    mode="dropdown"
+                                    style={{ width: undefined }}
+                                    placeholder="Pilih Jenis Kelamain"
+                                    placeholderStyle={{ color: "#bfc6ea" }}
+                                    placeholderIconColor="#007aff"
+                                    selectedValue={formData.jenis_kelamin}
+                                    onValueChange={(val) => dispatch(setFormPengajuan('jenis_kelamin', val))}
+                                >
+                                    <Picker.Item label="Laki-Laki" value="L" />
+                                    <Picker.Item label="Perempuan" value="P" />
+                                </Picker>
+                            </Item>
                         </Item>
                     </View>
                     <View padder style={{ flexDirection: 'row' }}>
                         <View style={{ flex: 1 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
-                                <Label>Tanggal Lahir</Label>
-                                <TanggalLahir />
+                                <Label style={{ marginBottom: 9 }}>Tanggal Lahir</Label>
+                                <DatePicker
+                                    defaultDate={new Date()}
+                                    locale={"en"}
+                                    timeZoneOffsetInMinutes={undefined}
+                                    modalTransparent={false}
+                                    animationType={"fade"}
+                                    androidMode={"default"}
+                                    placeHolderText="Select date"
+                                    textStyle={{ color: "green" }}
+                                    placeHolderTextStyle={{ color: "#d3d3d3" }}
+                                    disabled={false}
+                                    multiline={true}
+                                    numberOfLines={2}
+                                    onDateChange={(value) => dispatch(setFormPengajuan('tanggal_lahir', value))}
+                                >
+                                </DatePicker>
                             </Item>
                         </View>
                         <View style={{ flex: 0.2 }} />
@@ -111,7 +195,9 @@ const EditPengajuanScreen = ({ navigation }) => {
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Tempat Lahir</Label>
                                 <Input value={formData.tempat_lahir}
-                                    editable={true}
+                                    editable={true} onChangeText={(val) => {
+                                        dispatch(setFormPengajuan('tempat_lahir', val))
+                                    }}
                                 />
                             </Item>
                         </View>
@@ -120,7 +206,9 @@ const EditPengajuanScreen = ({ navigation }) => {
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Umur</Label>
                                 <Input value={formData.umur.toString()}
-                                    editable={true}
+                                    editable={true} onChangeText={(val) => {
+                                        dispatch(setFormPengajuan('umur', val))
+                                    }}
                                 />
                             </Item>
                         </View>
@@ -129,18 +217,23 @@ const EditPengajuanScreen = ({ navigation }) => {
                         <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                             <Label>Alamat</Label>
                             <Input multiline={true} numberOfLines={3} value={formData.alamat}
-                                editable={true}
+                                editable={true} onChangeText={(val) => {
+                                    dispatch(setFormPengajuan('alamat', val))
+                                }}
                             />
                         </Item>
                     </View>
+                    <AlamatPicker />
                     <View style={{ borderWidth: 1, margin: 10 }}>
                         <H3 style={{ textAlign: 'center', backgroundColor: '#87ceeb' }}>Nilai-Nilai UN</H3>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 14 }}>
                             <Item inlineLabel style={{ width: '40%', borderBottomColor: '#24d169' }}>
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Bahasa Indonesia</Label>
-                                    <Input value={formData.nilai_indonesia.toString()}
-                                        editable={true}
+                                    <Input value={formData.nilai_indonesia.toString()} keyboardType={"numeric"}
+                                        editable={true} onChangeText={(val) => {
+                                            dispatch(setFormPengajuan('nilai_indonesia', val))
+                                        }}
                                     />
                                 </View>
                             </Item>
@@ -148,7 +241,9 @@ const EditPengajuanScreen = ({ navigation }) => {
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Bahasa Inggris</Label>
                                     <Input value={formData.nilai_inggris.toString()}
-                                        editable={true}
+                                        editable={true} onChangeText={(val) => {
+                                            dispatch(setFormPengajuan('nilai_inggris', val))
+                                        }}
                                     />
                                 </View>
                             </Item>
@@ -158,7 +253,9 @@ const EditPengajuanScreen = ({ navigation }) => {
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>Matematika</Label>
                                     <Input value={formData.nilai_matematika.toString()}
-                                        editable={true}
+                                        editable={true} onChangeText={(val) => {
+                                            dispatch(setFormPengajuan('nilai_matematika', val))
+                                        }}
                                     />
                                 </View>
                             </Item>
@@ -166,7 +263,9 @@ const EditPengajuanScreen = ({ navigation }) => {
                                 <View style={{ flexDirection: "column" }}>
                                     <Label>IPA</Label>
                                     <Input value={formData.nilai_ipa.toString()}
-                                        editable={true}
+                                        editable={true} onChangeText={(val) => {
+                                            dispatch(setFormPengajuan('nilai_ipa', val))
+                                        }}
                                     />
                                 </View>
                             </Item>
@@ -190,9 +289,12 @@ const EditPengajuanScreen = ({ navigation }) => {
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
                     <Button full success
-                        onPress={() => console.log('Simpan')}
+                        onPress={() => saveButton()}
+                        disabled={isLoading}
                     >
-                        <Text style={{ textAlign: 'center' }}>Simpan</Text>
+                        {isLoading
+                            ? <Spinner color='white' />
+                            : <Text style={{ textAlign: 'center' }}>Simpan</Text>}
                     </Button>
                 </View>
             </View>

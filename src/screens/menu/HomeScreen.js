@@ -57,7 +57,7 @@ const HomeScreen = ({ navigation }) => {
                         <View style={{ flexDirection: 'row', width: '79%', marginLeft: 40 }}>
                             <TouchableOpacity
                                 activeOpacity={0.8}
-                                onPress={() => console.log('2')}
+                                onPress={() => navigation.navigate('CekKuotaScreen')}
                                 style={styles.boxTwo}
                             >
                                 <View style={{ flex: 3, alignItems: 'center' }}>
@@ -67,7 +67,7 @@ const HomeScreen = ({ navigation }) => {
                                     <Text style={{ fontSize: 11, color: 'black' }}>Cek Kuota Pendaftaraan</Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity
+                            {/* <TouchableOpacity
                                 activeOpacity={0.8}
                                 onPress={() => console.log('3')}
                                 style={styles.boxThree}
@@ -78,7 +78,7 @@ const HomeScreen = ({ navigation }) => {
                                 <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#87ceeb', alignItems: 'center' }}>
                                     <Text style={{ fontSize: 13, color: 'black' }}>Info Pendaftaraan</Text>
                                 </View>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                         </View>
                     </Content>
                 </ImageBackground>

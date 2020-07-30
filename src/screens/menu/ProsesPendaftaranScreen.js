@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     ImageBackground,
     StyleSheet,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from "react-native"
 
 import {
@@ -18,10 +19,32 @@ import {
 import { Background3 } from '../../assets'
 import Icon from 'react-native-vector-icons/Ionicons'
 import ProgressCircle from 'react-native-progress-circle'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { getMethod } from '../../components/apimethod'
+import { profileUrl, baseUrl } from '../../components/url'
+import { setUserLogin, setUserToken } from '../../redux/actions'
 
 const ProsesPendaftaranScreen = ({ navigation }) => {
     const userState = useSelector((state) => state.UserReducer)
+    const dispatch = useDispatch()
+    const getProfile = async () => {
+        const urlProfile = baseUrl + profileUrl
+        const token = userState.token
+        const result = await getMethod(urlProfile, userState.token)
+        if (result.data) {
+            dispatch(setUserLogin(result.data))
+            dispatch(setUserToken(token))
+        }
+        else if (result.error) {
+            Alert.alert('Kesalahan', result.error)
+        }
+
+    }
+
+    useEffect(() => {
+        getProfile()
+    }, [])
+
     const StatusSiswa = () => {
         switch (userState.status) {
             case 0:
@@ -38,11 +61,17 @@ const ProsesPendaftaranScreen = ({ navigation }) => {
             case 11:
             case 12:
             case 13:
-                status = 'Sedang Diverifikasi';
+                status = 'Proses Seleksi';
                 break;
+            case 7:
+                status = 'Pendaftaran Ditolak';
+                break;
+            case 8:
+                status = 'Pendaftaran Diterima'
+                break
         }
         return (
-            <Text style={{ textAlign: 'center', fontSize: 23, fontStyle: 'italic' }}>
+            <Text style={{ textAlign: 'center', fontSize: 23, fontStyle: 'italic'}}>
                 {status}
             </Text>
         )
@@ -51,34 +80,48 @@ const ProsesPendaftaranScreen = ({ navigation }) => {
     const PercentageCircle = () => {
         var status = 0;
         var text = '';
+        let color = "#3399FF"
         switch (userState.status) {
             case 0:
                 status = 0;
                 text = '0%'
                 break;
             case 1:
-                status = 25;
-                text = '25%';
+                status = 20;
+                text = '20%';
                 break;
             case 2:
-                status = 50;
-                text = '50%';
+                status = 40;
+                text = '40%';
                 break;
             case 3:
             case 10:
             case 11:
             case 12:
             case 13:
-                status = 75;
-                text = '75%';
+                status = 65;
+                text = '60%';
                 break;
+            case 5:
+                status = 80;
+                text = '80%'
+                break;
+            case 7:
+                color = 'red'
+                status = 100;
+                text = ''
+                break
+            case 8:
+                status = 100;
+                text = '100%'
+                break
         }
         return (
             <ProgressCircle
                 percent={status}
                 radius={35}
                 borderWidth={8}
-                color="#3399FF"
+                color={color}
                 shadowColor="#999"
                 bgColor="#fff"
                 outerCircleStyle={{ marginLeft: 10 }}
@@ -120,21 +163,84 @@ const ProsesPendaftaranScreen = ({ navigation }) => {
                 box1 = styles.boxSucces
                 box2 = styles.boxSucces
                 box3 = styles.boxSucces
+                box4 = styles.boxSecondary
+                break;
+            case 5:
+                box1 = styles.boxSucces
+                box2 = styles.boxSucces
+                box3 = styles.boxSucces
                 box4 = styles.boxPrimary
+                break;
+            case 7:
+                box1 = styles.boxDanger
+                box2 = styles.boxDanger
+                box3 = styles.boxDanger
+                box4 = styles.boxDanger
+                break;
+            case 8:
+                box1 = styles.boxSucces
+                box2 = styles.boxSucces
+                box3 = styles.boxSucces
+                box4 = styles.boxSucces
                 break;
         }
         const navigateToScreen = (val) => {
             if (val === 'identitas'){
-                navigation.navigate('PelengkapanIdentitasScreen')
+                switch (box1) {
+                    case styles.boxPrimary:
+                        navigation.navigate('PelengkapanIdentitasScreen')
+                        break;
+                    case styles.boxSucces:
+                        Alert.alert('Pemberitahuan','Tahapan Ini Telah Selesai')
+                        break;
+                    case styles.boxSecondary:
+                        Alert.alert('Pembeitahuan','Silahkan Selesaikan Tahap Sebelumnya Terlebih Dahulu')
+                        break;
+                }
             }
             else if (val === 'berkas'){
-                navigation.navigate('PelengkapanBerkasScreen')
+                switch (box2) {
+                    case styles.boxPrimary:
+                        navigation.navigate('PelengkapanBerkasScreen')
+                        break;
+                    case styles.boxSucces:
+                        Alert.alert('Pemberitahuan','Tahapan Ini Telah Selesai')
+                        break;
+                    case styles.boxSecondary:
+                        Alert.alert('Pembeitahuan','Silahkan Selesaikan Tahap Sebelumnya Terlebih Dahulu')
+                        break;
+                }
             }
             else if (val === 'pengajuan'){
-                navigation.navigate('PengajuanScreen')
+                switch (box3) {
+                    case styles.boxPrimary:
+                        navigation.navigate('PengajuanScreen')
+                        break;
+                    case styles.boxSucces:
+                        Alert.alert('Pemberitahuan','Tahapan Ini Telah Selesai')
+                        break;
+                    case styles.boxSecondary:
+                        Alert.alert('Pembeitahuan','Silahkan Selesaikan Tahap Sebelumnya Terlebih Dahulu')
+                        break;
+                }
             }
             else if (val === 'daftar_ulang'){
-                navigation.navigate('PelengkapanIdentitasScreen')
+                switch (box4) {
+                    case styles.boxPrimary:
+                        navigation.navigate('DaftarUlangScreen')
+                        break;
+                    case styles.boxSucces:
+                        Alert.alert('Pemberitahuan','Tahapan Ini Telah Selesai')
+                        break;
+                    case styles.boxSecondary:
+                        if (box3 === styles.boxSucces){
+                            Alert.alert('Pembeitahuan','Silahkan Tunggu Proses Seleksi yang dilakukan oleh admin.')
+                        }
+                        else{
+                            Alert.alert('Pembeitahuan','Silahkan Selesaikan Tahap Sebelumnya Terlebih Dahulu')
+                        }
+                        break;
+                }
             }
         }
         return (
@@ -177,7 +283,7 @@ const ProsesPendaftaranScreen = ({ navigation }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     activeOpacity={0.8}
-                    onPress={() => console.log('2')}
+                    onPress={() => navigateToScreen('daftar_ulang')}
                     style={box4}
                 >
                     <View style={{ flex: 3, alignItems: 'center', justifyContent: 'center' }}>
@@ -221,7 +327,7 @@ const ProsesPendaftaranScreen = ({ navigation }) => {
                                         <View style={{ flex: 1, justifyContent: 'center' }}>
                                             <Text style={{ fontSize: 20 }}>(</Text>
                                         </View>
-                                        <View style={{ flex: 20 }}>
+                                        <View style={{ flex: 20, justifyContent:'center' }}>
                                             <StatusSiswa />
                                         </View>
                                         <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -257,14 +363,14 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginHorizontal: 18,
     },
-    boxPercentage: {
-        flex: 1,
-        flexDirection: 'row',
-    },
     boxButton: {
         flex: 2.4,
         flexDirection: 'row',
         flexWrap: "wrap",
+    },
+    boxPercentage: {
+        flex: 1,
+        flexDirection: 'row',
     },
     boxPrimary: {
         backgroundColor: '#0275d8',
@@ -282,6 +388,13 @@ const styles = StyleSheet.create({
     },
     boxSucces: {
         backgroundColor: '#5cb85c',
+        height: 90,
+        width: '45%',
+        marginLeft: 12,
+        marginBottom: 30
+    },
+    boxDanger: {
+        backgroundColor: '#d9534f',
         height: 90,
         width: '45%',
         marginLeft: 12,

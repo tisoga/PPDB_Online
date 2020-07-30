@@ -1,23 +1,24 @@
 import axios from 'axios'
+import { baseUrl, profileUrl } from '../url'
 
-const putMethod = async (url, formData = null, token = null) => {
-    // console.log(url)
-    // console.log(formData)
-    // console.log(token)
+const getProfile = async (token) => {
+    const url = baseUrl + profileUrl
     const headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': 'Token ' + token
     }
     try {
-        const result = await axios.put(url, formData, { 'headers': headers })
-        return { 'data': result.data }
+        const result = await axios.get(url, { 'headers': headers })
+        return result.data
     }
     catch (error) {
-        console.log(error.request)
+        // console.log(error.response)
         if (error.response) {
-            // console.log(error.response)
+            // console.log(error.response.status)
+            // console.log(error.response.data)
             switch (error.response.status) {
-                case 400:
+                case 401:
+                    return { 'error': Object.values(error.response.data)[0] }
+                case 404:
                     return { 'error': Object.values(error.response.data)[0] }
                 default:
                     return { 'error': 'Terjadi Kesalahan' }
@@ -32,4 +33,5 @@ const putMethod = async (url, formData = null, token = null) => {
     }
 }
 
-export default putMethod
+
+export default getProfile

@@ -17,7 +17,9 @@ import {
     BerkasScreen,
     LihatDokumenScreen,
     UploadBerkasScreen,
-    EditPengajuanScreen
+    EditPengajuanScreen,
+    DaftarUlangScreen,
+    CekKuotaScreen
 } from "../screens/menu";
 import { useSelector } from 'react-redux';
 
@@ -73,6 +75,16 @@ const HomeStackScreen = () => {
             <HomeStack.Screen
                 name='EditPengajuanScreen'
                 component={EditPengajuanScreen}
+                options={{ headerShown: false }}
+            />
+            <HomeStack.Screen
+                name='DaftarUlangScreen'
+                component={DaftarUlangScreen}
+                options={{ headerShown: false }}
+            />
+            <HomeStack.Screen
+                name='CekKuotaScreen'
+                component={CekKuotaScreen}
                 options={{ headerShown: false }}
             />
         </HomeStack.Navigator>

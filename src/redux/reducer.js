@@ -17,7 +17,8 @@ import {
     SET_BERKAS_FORM,
     RESET_BERKAS_FORM,
     SET_FORM_PENGAJUAN,
-    INITIAL_FORM_PENGAJUAN
+    INITIAL_FORM_PENGAJUAN,
+    SET_FORM_SEKOLAH
 } from './actions'
 
 const initialStateLogin = {
@@ -91,11 +92,9 @@ const inititalBerkasForm = {
 }
 
 const inititalPengajuanForm = {
-    user: {
-        first_name: '',
-        last_name: '',
-    },
-    jenis_kelamin: 'L',
+    first_name: '',
+    last_name: '',
+    jenis_kelamin: '',
     tanggal_lahir: '',
     tempat_lahir: '',
     umur: '',
@@ -112,6 +111,19 @@ const inititalPengajuanForm = {
     berkas_akta: '',
     berkas_ijazah: '',
     berkas_kesehatan: ''
+}
+
+const initialFormSekolah = {
+    nama : '',
+    alamat: '',
+    daya_tampung: '',
+    sisa_zonasi: '',
+    sisa_afirmasi: '',
+    sisa_perpindahan: '',
+    sisa_prestasi: '',
+    status_pendaftaran: '',
+    jam_daftar_ulang: '',
+    tanggal_daftar_ulang: ''
 }
 
 const RegisterReducer = (state = initialStateRegister, action) => {
@@ -274,6 +286,15 @@ const PengajuanFormReducer = (state = inititalPengajuanForm, action) => {
     }
 }
 
+const SekolahReducer = (state = initialFormSekolah, action) => {
+    switch (action.type) {
+        case SET_FORM_SEKOLAH:
+            return state = action.payload
+        default:
+            return state
+    }
+}
+
 const reducer = combineReducers({
     LoginReducer,
     RegisterReducer,
@@ -286,7 +307,8 @@ const reducer = combineReducers({
     ProvinsiReducer,
     IdentitasFormReducer,
     BerkasFormReducer,
-    PengajuanFormReducer
+    PengajuanFormReducer,
+    SekolahReducer
 });
 
 export default reducer
