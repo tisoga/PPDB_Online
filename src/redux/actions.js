@@ -27,6 +27,8 @@ export const INITIAL_FORM_PENGAJUAN = 'INITIAL_FORM_PENGAJUAN';
 export const SET_FORM_PENGAJUAN = 'SET_FORM_PENGAJUAN';
 
 export const SET_FORM_SEKOLAH = 'SET_FORM_SEKOLAH';
+export const SET_PENGUMUMAN = 'SET_PENGUMUMAN';
+export const SET_DETAIL_PENGUMUMAN = 'SET_DETAIL_PENGUMUMAN'
 
 export const setFormLogin = (inputType, inputValue) => {
     return {
@@ -120,7 +122,7 @@ export const setIdentiasForm = (form, val) => {
 }
 
 export const resetIdentitasForm = () => {
-    return{
+    return {
         type: RESET_IDENTITAS_FORM
     }
 }
@@ -134,7 +136,7 @@ export const setBerkasForm = (form, val) => {
 }
 
 export const resetBerkasForm = () => {
-    return{
+    return {
         type: RESET_BERKAS_FORM
     }
 }
@@ -157,6 +159,20 @@ export const initialFormPengajuan = (val) => {
 export const setFormSekolah = (val) => {
     return {
         type: SET_FORM_SEKOLAH,
+        payload: val
+    }
+}
+
+export const setPengumuman = (val) => {
+    return {
+        type: SET_PENGUMUMAN,
+        payload: val
+    }
+} 
+
+export const setDetailPengumuman = (val) => {
+    return {
+        type: SET_DETAIL_PENGUMUMAN,
         payload: val
     }
 }

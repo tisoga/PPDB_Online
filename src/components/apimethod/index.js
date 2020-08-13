@@ -8,6 +8,18 @@ import getKecamatan from './getKecamatan'
 import getDesa from './getDesa'
 import getProfile from './getProfile'
 import getSekolah from './getSekolah'
+import getPengumuman from './getPengumuman'
 
-
-export { postMethod, getMethod, getProvinsi, getKota, getKecamatan, getDesa, putMethod, patchMethod, getProfile, getSekolah }
+export { 
+    postMethod, 
+    getMethod,
+    getProvinsi, 
+    getKota, 
+    getKecamatan, 
+    getDesa, 
+    putMethod, 
+    patchMethod, 
+    getProfile, 
+    getSekolah,
+    getPengumuman
+}

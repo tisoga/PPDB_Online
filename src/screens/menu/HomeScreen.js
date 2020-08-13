@@ -63,22 +63,22 @@ const HomeScreen = ({ navigation }) => {
                                 <View style={{ flex: 3, alignItems: 'center' }}>
                                     <Icon name='book' size={60} />
                                 </View>
-                                <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#87ceeb', alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 11, color: 'black' }}>Cek Kuota Pendaftaraan</Text>
+                                <View style={{ flex: 1.5, alignItems: 'center', backgroundColor: '#87ceeb', alignItems: 'center' }}>
+                                    <Text style={{ fontSize: 13, color: 'black', textAlign:'center' }}>Cek Kuota Pendaftaraan</Text>
                                 </View>
                             </TouchableOpacity>
-                            {/* <TouchableOpacity
+                            <TouchableOpacity
                                 activeOpacity={0.8}
-                                onPress={() => console.log('3')}
+                                onPress={() => navigation.navigate('CekPengumuman')}
                                 style={styles.boxThree}
                             >
                                 <View style={{ flex: 3, alignItems: 'center' }}>
                                     <Icon name='information-circle' size={60} />
                                 </View>
-                                <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#87ceeb', alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 13, color: 'black' }}>Info Pendaftaraan</Text>
+                                <View style={{ flex: 1.5, alignItems: 'center', backgroundColor: '#87ceeb', alignItems: 'center' }}>
+                                    <Text style={{ fontSize: 13, color: 'black', textAlign:'center' }}>Cek Pengumuman Penerimaan</Text>
                                 </View>
-                            </TouchableOpacity> */}
+                            </TouchableOpacity>
                         </View>
                     </Content>
                 </ImageBackground>
@@ -113,14 +113,15 @@ const styles = StyleSheet.create({
     },
     boxTwo: {
         flex: 1,
-        height: 90,
+        height: 110,
         backgroundColor: 'white',
         borderWidth: 1,
-        marginRight: 10
+        marginRight: 10,
+        marginLeft: -7
     },
     boxThree: {
         flex: 1,
-        height: 90,
+        height: 110,
         backgroundColor: 'white',
         borderWidth: 1,
     }

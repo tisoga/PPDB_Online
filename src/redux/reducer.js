@@ -18,7 +18,9 @@ import {
     RESET_BERKAS_FORM,
     SET_FORM_PENGAJUAN,
     INITIAL_FORM_PENGAJUAN,
-    SET_FORM_SEKOLAH
+    SET_FORM_SEKOLAH,
+    SET_PENGUMUMAN,
+    SET_DETAIL_PENGUMUMAN
 } from './actions'
 
 const initialStateLogin = {
@@ -124,6 +126,15 @@ const initialFormSekolah = {
     status_pendaftaran: '',
     jam_daftar_ulang: '',
     tanggal_daftar_ulang: ''
+}
+
+const inititalDetailPengumuman = {
+    nis : '',
+    nama : '',
+    alamat: '',
+    jenis_kelamin: '',
+    tanggal_lahir: '',
+    nilai_rata: ''
 }
 
 const RegisterReducer = (state = initialStateRegister, action) => {
@@ -295,6 +306,32 @@ const SekolahReducer = (state = initialFormSekolah, action) => {
     }
 }
 
+const PengumumanReducer = (state = [], action) => {
+    switch (action.type) {
+        case SET_PENGUMUMAN:
+            return state = action.payload
+        default:
+            return state = []
+    }
+}
+
+const DetailPengumumanReducer = (state = inititalDetailPengumuman, action) => {
+    switch (action.type){
+        case SET_DETAIL_PENGUMUMAN:
+            return {
+                ...state,
+                ['nis']: action.payload.nis,
+                ['nama']: action.payload.nama,
+                ['alamat']: action.payload.alamat,
+                ['jenis_kelamin']: action.payload.jenis_kelamin,
+                ['tanggal_lahir']: action.payload.tanggal_lahir,
+                ['nilai_rata']: action.payload.rata
+            }
+        default:
+            return state
+    }
+}
+
 const reducer = combineReducers({
     LoginReducer,
     RegisterReducer,
@@ -308,7 +345,9 @@ const reducer = combineReducers({
     IdentitasFormReducer,
     BerkasFormReducer,
     PengajuanFormReducer,
-    SekolahReducer
+    SekolahReducer,
+    PengumumanReducer,
+    DetailPengumumanReducer
 });
 
 export default reducer

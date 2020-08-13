@@ -4,7 +4,8 @@ import { useSelector } from 'react-redux'
 import { SplashScreen } from './src/screens/authentication'
 import { HomeNavigation, AuthNavigation } from './src/route';
 import SandBox from './src/screens/SandBox';
-import { PelengkapanIdentitasScreen } from './src/screens/menu';
+import { PelengkapanIdentitasScreen, CekKuotaScreen } from './src/screens/menu';
+import CekPengumuman from './src/screens/menu/CekPengumuman';
 
 const App: () => React$Node = () => {
     const [isLoading, setLoading] = useState(true)

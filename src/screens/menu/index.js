@@ -14,6 +14,7 @@ import LihatDokumenScreen from './LihatDokumenScreen'
 import EditPengajuanScreen from './EditPengajuanScreen'
 import DaftarUlangScreen from './DaftarUlang'
 import CekKuotaScreen from './CekKuotaScreen'
+import PengumumanPenerimaanScreen from './CekPengumuman'
 
 
 export {
@@ -32,5 +33,6 @@ export {
     LihatDokumenScreen,
     EditPengajuanScreen,
     DaftarUlangScreen,
-    CekKuotaScreen
+    CekKuotaScreen,
+    PengumumanPenerimaanScreen
 }
