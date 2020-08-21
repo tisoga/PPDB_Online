@@ -25,7 +25,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import ImagePicker from 'react-native-image-picker'
 import { useDispatch, useSelector } from 'react-redux'
 import { setBerkasForm, resetBerkasForm, setUserLogin, setUserToken } from '../../redux/actions'
-import { isObjectsEmpty } from '../../components/others'
+import { isObjectsEmpty, nilaiValidation } from '../../components/others'
 import { putMethod, getProfile } from '../../components/apimethod'
 import { baseUrl, berkasUrl } from '../../components/url'
 
@@ -89,6 +89,10 @@ const PelengkapanBerkas = ({ navigation }) => {
         if (!Number.isFinite(parseFloat(formData.nilai_matematika) && parseFloat(formData.nilai_indonesia)
             && parseFloat(formData.nilai_inggris) && parseFloat(formData.nilai_ipa))) {
             Alert.alert('Kesalahan', 'Harap Masukan angka saja didalam Form Nilai UN')
+        }
+        else if (!nilaiValidation(formData.nilai_indonesia, formData.nilai_matematika,
+            formData.nilai_inggris, formData.nilai_ipa)) {
+            Alert.alert('Kesalahan', 'Angka untuk Nilai UN Tidak boleh lebih dari 100 atau kurang dari 0')
         }
         else if (isObjectsEmpty(formData)) {
             setLoading(true)

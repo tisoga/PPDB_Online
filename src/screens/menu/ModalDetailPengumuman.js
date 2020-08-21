@@ -12,7 +12,7 @@ import {
 import Modal from 'react-native-modal'
 
 const ModalDetailPengumuman = ({ isVisible, setModal, data }) => {
-    console.log(data)
+    // console.log(data)
     return (
         <Modal isVisible={isVisible}
             style={styles.viewModal}

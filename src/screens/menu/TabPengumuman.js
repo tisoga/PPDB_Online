@@ -33,7 +33,7 @@ const TabPengumuman = ({ data, setModal, dispatch }) => {
             'tanggal_lahir': tgl,
             'nilai_rata': rata.toFixed(2)
         }
-        console.log(value)
+        // console.log(value)
         dispatch(value)
         setModal(true)
     }

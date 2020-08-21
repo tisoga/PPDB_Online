@@ -17,20 +17,17 @@ const postMethod = async (url, data = null, token = null) => {
     }
     catch (error) {
         if (error.response) {
-            // if (error.response.data.length == 1){
-            //    const data = { 'error': Object.values(error.response.data)[0]}
-            // }
-            // else if (error.response.data.length >= 2){
-            //     const data = { 'error': Object.values(error.response.data)[0][0]}
-            // }
             switch (error.response.status) {
                 case 400:
                     let data = ''
-                    if (error.response.data.length == 1){
-                       data = { 'error': Object.values(error.response.data)[0]}
+                    if (error.response.data.length == 1) {
+                        data = { 'error': Object.values(error.response.data)[0] }
                     }
-                    else if (error.response.data.length >= 2){
-                       data = { 'error': Object.values(error.response.data)[0][0]}
+                    else if (error.response.data.length >= 2) {
+                        data = { 'error': Object.values(error.response.data)[0][0] }
+                    }
+                    else {
+                        data = { 'error': Object.values(error.response.data)[0] }
                     }
                     return data
                 default:

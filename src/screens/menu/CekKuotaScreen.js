@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     ImageBackground,
     StyleSheet,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from "react-native"
 
 import {
@@ -18,14 +19,16 @@ import {
 } from "native-base"
 import { Background3 } from '../../assets'
 import Icon from 'react-native-vector-icons/Ionicons'
-import ProgressCircle from 'react-native-progress-circle'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { getSekolah } from '../../components/apimethod'
+import { setFormSekolah } from '../../redux/actions'
 
 const CekKuotaScreen = ({ navigation }) => {
     const userState = useSelector((state) => state.UserReducer)
     const sekolahState = useSelector((state) => state.SekolahReducer)
     const alamat_lengkap = JSON.parse(sekolahState.alamat_lengkap_split.replace(/'/g, '"'))
-
+    const dispatch = useDispatch()
+    
     const RenderBox = () => {
         const daya_tampung = sekolahState.daya_tampung
         const zonasi = parseInt(daya_tampung * 0.50)
@@ -87,6 +90,21 @@ const CekKuotaScreen = ({ navigation }) => {
             </>
         )
     }
+
+    const getInfoSekolah = async () => {
+        const result = await getSekolah()
+        // console.log(result.data)
+        if (result.data) {
+            dispatch(setFormSekolah(result.data))
+        }
+        else if (result.error) {
+            Alert.alert('Kesalahan', result.error)
+        }
+    }
+
+    useEffect(() => {
+        getInfoSekolah()
+    },[])
 
     return (
         <>

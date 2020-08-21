@@ -15,6 +15,7 @@ import EditPengajuanScreen from './EditPengajuanScreen'
 import DaftarUlangScreen from './DaftarUlang'
 import CekKuotaScreen from './CekKuotaScreen'
 import PengumumanPenerimaanScreen from './CekPengumuman'
+import GantiPasswordScreen from './GantiPasswordScreen'
 
 
 export {
@@ -34,5 +35,6 @@ export {
     EditPengajuanScreen,
     DaftarUlangScreen,
     CekKuotaScreen,
-    PengumumanPenerimaanScreen
+    PengumumanPenerimaanScreen,
+    GantiPasswordScreen
 }

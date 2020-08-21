@@ -40,8 +40,9 @@ const EditPengajuanScreen = ({ navigation }) => {
     const saveButton = async () => {
         let sendData = new FormData();
         const url = baseUrl + pengajuanUrl
-        delete formData['asal_sekolah']
+        delete formData['jalur_pendaftaran']
         delete formData['berkas_tambahan']
+        console.log(formData)
         if (!Number.isFinite(parseFloat(formData.nilai_matematika) && parseFloat(formData.nilai_indonesia)
             && parseFloat(formData.nilai_inggris) && parseFloat(formData.nilai_ipa))) {
             Alert.alert('Kesalahan', 'Harap Masukan angka saja didalam Form Nilai UN')
@@ -209,7 +210,7 @@ const EditPengajuanScreen = ({ navigation }) => {
                                     editable={true} onChangeText={(val) => {
                                         dispatch(setFormPengajuan('umur', val))
                                     }}
-                                />
+                                    keyboardType={'number-pad'} />
                             </Item>
                         </View>
                     </View>

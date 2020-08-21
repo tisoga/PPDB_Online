@@ -6,7 +6,7 @@ import { HomeNavigation, AuthNavigation } from './src/route';
 import SandBox from './src/screens/SandBox';
 import { PelengkapanIdentitasScreen, CekKuotaScreen } from './src/screens/menu';
 import CekPengumuman from './src/screens/menu/CekPengumuman';
-
+import GantiPasswordScreen from './src/screens/menu/GantiPasswordScreen'
 const App: () => React$Node = () => {
     const [isLoading, setLoading] = useState(true)
     const isSignedIn = useSelector((state) => state.IsSignedReducer.isSigned)

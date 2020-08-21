@@ -20,7 +20,8 @@ import {
     EditPengajuanScreen,
     DaftarUlangScreen,
     CekKuotaScreen,
-    PengumumanPenerimaanScreen
+    PengumumanPenerimaanScreen,
+    GantiPasswordScreen
 } from "../screens/menu";
 import { useSelector } from 'react-redux';
 
@@ -117,6 +118,7 @@ const ProfileStackSCreen = () => {
     return (
         <ProfileStack.Navigator>
             <ProfileStack.Screen name='ProfileScreen' component={ProfileScreen} options={{ headerShown: false }} />
+            <ProfileStack.Screen name='GantiPasswordScreen' component={GantiPasswordScreen} options={{ headerShown: false }} />
         </ProfileStack.Navigator>
     )
 }

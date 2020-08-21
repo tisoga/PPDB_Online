@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
-    StyleSheet, View, Alert,
+    StyleSheet, View, Alert
 } from "react-native"
 
 import {
@@ -12,24 +12,21 @@ import {
     Tabs,
     Tab,
     ScrollableTab,
-    Text,
-    H2,
-    H1,
-    Content,
-    Button,
+    Text
 } from "native-base"
 import Icon from 'react-native-vector-icons/Ionicons'
 import { useSelector, useDispatch } from 'react-redux'
 import TabPengumuman from './TabPengumuman'
 import ModalDetailPengumuman from './ModalDetailPengumuman'
-import { getPengumuman } from '../../components/apimethod'
-import { setPengumuman } from '../../redux/actions'
+import { getPengumuman, getSekolah } from '../../components/apimethod'
+import { setPengumuman, setFormSekolah } from '../../redux/actions'
 
 const CekPengumuman = ({ navigation }) => {
     const [modal, setModal] = useState(false)
     const [dataDetail, setDataDetail] = useState('')
     const dataPengumuman = useSelector((state) => state.PengumumanReducer)
-    console.log(dataPengumuman)
+    const sekolahState = useSelector((state) => state.SekolahReducer)
+    // console.log(dataPengumuman)
     const dispatch = useDispatch()
 
     const getDataPengumuman = async () => {
@@ -42,8 +39,22 @@ const CekPengumuman = ({ navigation }) => {
             Alert.alert('Kesalaham', result.error)
         }
     }
+
+    const getInfoSekolah = async () => {
+        const result = await getSekolah()
+        // console.log(result.data)
+        if (result.data) {
+            dispatch(setFormSekolah(result.data))
+        }
+        else if (result.error) {
+            Alert.alert('Kesalahan', result.error)
+        }
+    }
+
     useEffect(() => {
-        getDataPengumuman()
+        getDataPengumuman();
+        getInfoSekolah();
+        console.log(sekolahState)
     }, [])
 
     return (
@@ -57,36 +68,47 @@ const CekPengumuman = ({ navigation }) => {
                         <Title style={{ alignSelf: 'center' }}>Cek Pengumuman Penerimaan</Title>
                     </Body>
                 </Header>
-                <Tabs renderTabBar={() => <ScrollableTab />}>
-                    <Tab heading="Zonasi">
-                        <TabPengumuman
-                            data={dataPengumuman.zonasi}
-                            setModal={setModal}
-                            dispatch={setDataDetail}
-                        />
-                    </Tab>
-                    <Tab heading="Afirmasi">
-                        <TabPengumuman
-                            data={dataPengumuman.afirmasi}
-                            setModal={setModal}
-                            dispatch={setDataDetail}
-                        />
-                    </Tab>
-                    <Tab heading="Perpindahan Orang Tua">
-                        <TabPengumuman
-                            data={dataPengumuman.perpindahan}
-                            setModal={setModal}
-                            dispatch={setDataDetail}
-                        />
-                    </Tab>
-                    <Tab heading="Prestasi">
-                        <TabPengumuman
-                            data={dataPengumuman.prestasi}
-                            setModal={setModal}
-                            dispatch={setDataDetail}
-                        />
-                    </Tab>
-                </Tabs>
+                {sekolahState.status_pendaftaran === 8
+                    ?
+                    <Tabs renderTabBar={() => <ScrollableTab />}>
+                        <Tab heading="Zonasi">
+                            {sekolahState.status_pendaftaran === 8
+                                ? <TabPengumuman
+                                    data={dataPengumuman.zonasi}
+                                    setModal={setModal}
+                                    dispatch={setDataDetail}
+                                />
+                                : <Text>123</Text>
+                            }
+
+                        </Tab>
+                        <Tab heading="Afirmasi">
+                            <TabPengumuman
+                                data={dataPengumuman.afirmasi}
+                                setModal={setModal}
+                                dispatch={setDataDetail}
+                            />
+                        </Tab>
+                        <Tab heading="Perpindahan Orang Tua">
+                            <TabPengumuman
+                                data={dataPengumuman.perpindahan}
+                                setModal={setModal}
+                                dispatch={setDataDetail}
+                            />
+                        </Tab>
+                        <Tab heading="Prestasi">
+                            <TabPengumuman
+                                data={dataPengumuman.prestasi}
+                                setModal={setModal}
+                                dispatch={setDataDetail}
+                            />
+                        </Tab>
+                    </Tabs>
+                    :
+                    <View style={styles.viewPemberitahunan}>
+                        <Text style={styles.textPemberitahuan}>Mohon Maaf, Pengumuman Penerimaan Pendaftaran Belum Tersedia.</Text>
+                    </View>
+                }
                 <ModalDetailPengumuman isVisible={modal} setModal={setModal} data={dataDetail} />
             </Container>
         </>
@@ -100,6 +122,18 @@ const styles = StyleSheet.create({
         margin: 0,
         marginHorizontal: 10
     },
+    viewPemberitahunan: {
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: 'black'
+    },
+    textPemberitahuan: {
+        textAlign: 'center',
+        fontSize: 30,
+        marginHorizontal: 10,
+        color: '#87ceeb'
+    }
 })
 
 export default CekPengumuman

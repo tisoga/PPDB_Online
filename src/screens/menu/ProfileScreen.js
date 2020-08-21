@@ -188,7 +188,7 @@ const ProfileScreen = ({ navigation }) => {
                         </View>
                         <ListItem itemDivider style={{ marginTop: 10 }} />
                         <List>
-                            {/* <ListItem onPress={() => console.log('1')}>
+                            <ListItem onPress={() => navigation.navigate('GantiPasswordScreen')}>
                                 <Left>
                                     <Icon name='key' size={20} color={'tomato'} />
                                     <Text style={styles.textLeft}>Ganti Password</Text>
@@ -196,7 +196,7 @@ const ProfileScreen = ({ navigation }) => {
                                 <Right>
                                     <Icon name='arrow-forward' size={20} color={'tomato'} />
                                 </Right>
-                            </ListItem> */}
+                            </ListItem>
                             <ListItem onPress={logout}>
                                 <Left>
                                     <Icon name='log-out' size={20} color={'tomato'} />

@@ -204,7 +204,8 @@ const PelengkapanIdentitas = ({ navigation }) => {
                         <View style={{ flex: 0.6 }}>
                             <Item style={{ borderBottomColor: '#24d169' }} stackedLabel>
                                 <Label>Umur</Label>
-                                <Input onChangeText={(val) => dispatch(setIdentiasForm('umur', val))} />
+                                <Input onChangeText={(val) => dispatch(setIdentiasForm('umur', val))}
+                                    keyboardType={'number-pad'} />
                             </Item>
                         </View>
                     </View>
@@ -236,9 +237,9 @@ const PelengkapanIdentitas = ({ navigation }) => {
                             disabled={isLoading}
                         >
                             {isLoading
-                            ? <Spinner color={'white'}/>
-                            : <Text>Simpan</Text>
-                        }
+                                ? <Spinner color={'white'} />
+                                : <Text>Simpan</Text>
+                            }
                         </Button>
                     </View>
 
