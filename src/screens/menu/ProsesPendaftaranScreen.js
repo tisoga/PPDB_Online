@@ -26,6 +26,7 @@ import { setUserLogin, setUserToken } from '../../redux/actions'
 
 const ProsesPendaftaranScreen = ({ navigation }) => {
     const userState = useSelector((state) => state.UserReducer)
+    console.log(userState.status)
     const dispatch = useDispatch()
     const getProfile = async () => {
         const urlProfile = baseUrl + profileUrl
@@ -62,6 +63,9 @@ const ProsesPendaftaranScreen = ({ navigation }) => {
             case 12:
             case 13:
                 status = 'Proses Seleksi';
+                break;
+            case 5:
+                status = 'Proses Daftar Ulang'
                 break;
             case 7:
                 status = 'Pendaftaran Ditolak';

@@ -33,7 +33,7 @@ const CekPengumuman = ({ navigation }) => {
         const result = await getPengumuman()
         if (result.data) {
             dispatch(setPengumuman(result.data))
-            // console.log(dataPengumuman)
+            // console.log(result.data)
         }
         else if (result.error) {
             Alert.alert('Kesalaham', result.error)
@@ -42,7 +42,7 @@ const CekPengumuman = ({ navigation }) => {
 
     const getInfoSekolah = async () => {
         const result = await getSekolah()
-        // console.log(result.data)
+        console.log(result.data)
         if (result.data) {
             dispatch(setFormSekolah(result.data))
         }
@@ -55,6 +55,7 @@ const CekPengumuman = ({ navigation }) => {
         getDataPengumuman();
         getInfoSekolah();
         console.log(sekolahState)
+        // console.log(dataPengumuman)
     }, [])
 
     return (
@@ -68,19 +69,15 @@ const CekPengumuman = ({ navigation }) => {
                         <Title style={{ alignSelf: 'center' }}>Cek Pengumuman Penerimaan</Title>
                     </Body>
                 </Header>
-                {sekolahState.status_pendaftaran === 8
+                {sekolahState.status_pendaftaran === 4
                     ?
                     <Tabs renderTabBar={() => <ScrollableTab />}>
                         <Tab heading="Zonasi">
-                            {sekolahState.status_pendaftaran === 8
-                                ? <TabPengumuman
-                                    data={dataPengumuman.zonasi}
-                                    setModal={setModal}
-                                    dispatch={setDataDetail}
-                                />
-                                : <Text>123</Text>
-                            }
-
+                            <TabPengumuman
+                                data={dataPengumuman.zonasi}
+                                setModal={setModal}
+                                dispatch={setDataDetail}
+                            />
                         </Tab>
                         <Tab heading="Afirmasi">
                             <TabPengumuman

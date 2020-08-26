@@ -24,13 +24,14 @@ import { ProfileImage } from '../../assets'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { useSelector, useDispatch } from 'react-redux'
 import moment from 'moment'
-import { baseUrl, logoutUrl } from '../../components/url'
+import { baseUrl, logoutUrl, mediaUrl } from '../../components/url'
 import { postMethod } from '../../components/apimethod'
 import AsyncStorage from '@react-native-community/async-storage'
 import { setIsSigned, setWelcome, resetIdentitasForm } from '../../redux/actions'
 
 const ProfileScreen = ({ navigation }) => {
     const userState = useSelector((state) => state.UserReducer)
+    console.log(userState)
     const dispatch = useDispatch()
     // console.log(userState)
 
@@ -50,9 +51,10 @@ const ProfileScreen = ({ navigation }) => {
     }
 
     const FotoDiri = () => {
+        // console.log(mediaUrl + userState.foto_diri)
         if (userState.foto_diri) {
             return (
-                <Thumbnail large source={{ uri: baseUrl + userState.foto_diri }} style={{ alignSelf: 'center' }} />
+                <Thumbnail large source={{ uri: mediaUrl + userState.foto_diri }} style={{ alignSelf: 'center' }} />
             )
         }
         else {
@@ -142,6 +144,17 @@ const ProfileScreen = ({ navigation }) => {
                 <Content>
                     <View style={{ marginTop: 10 }}>
                         <FotoDiri />
+                        <View style={styles.profileList}>
+                            <View style={styles.viewLeft}>
+                                <H3>NIM</H3>
+                            </View>
+                            <View style={styles.viewMiddle}>
+                                <Text>:</Text>
+                            </View>
+                            <View style={styles.viewRight}>
+                                <H3>{userState.nis}</H3>
+                            </View>
+                        </View>
                         <View style={styles.profileList}>
                             <View style={styles.viewLeft}>
                                 <H3>Nama Lengkap</H3>

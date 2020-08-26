@@ -3,9 +3,12 @@ import { baseUrl, sekolahUrl } from '../url'
 
 const getSekolah = async () => {
     const url = baseUrl + sekolahUrl
+    const headers = {
+        'Authorization': ''
+    }
     try {
-        const result = await axios.get(url)
-        // console.log(result)
+        const result = await axios.get(url, { 'headers': headers })
+        // console.log(result.data)
         return {'data': result.data}
     }
     catch (error) {

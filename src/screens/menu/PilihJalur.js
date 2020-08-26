@@ -111,12 +111,14 @@ const PilihJalur = ({ navigation }) => {
             case 'Zonasi':
                 console.log('Jalur Zonasi')
                 sendData.append('status', 10)
+                sendData.append('jalur_pendaftaran', 'Zonasi')
                 verification = true
                 break;
             case 'Afirmasi':
                 if (isObjectsEmpty(berkas)) {
                     console.log('Jalur Afirmasi')
                     sendData.append('status', 11)
+                    sendData.append('jalur_pendaftaran', 'Afirmasi')
                     sendData.append('berkas_tambahan', berkas.fileUpload)
                     verification = true
                 }
@@ -129,6 +131,7 @@ const PilihJalur = ({ navigation }) => {
                 if (berkas.fileUpload){
                     sendData.append('berkas_tambahan', berkas.fileUpload)
                 }
+                sendData.append('jalur_pendaftaran', 'Prestasi')
                 sendData.append('status', 13)
                 verification = true
                 break;
@@ -136,6 +139,7 @@ const PilihJalur = ({ navigation }) => {
                 if (isObjectsEmpty(berkas)) {
                     console.log('Jalur Perpindahan Orang Tua')
                     sendData.append('berkas_tambahan', berkas.fileUpload)
+                    sendData.append('jalur_pendaftaran', 'Perpindahan OrangTua')
                     sendData.append('status', 12)
                     verification = true
                 }

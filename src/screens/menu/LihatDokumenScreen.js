@@ -13,7 +13,7 @@ import {
     Body
 } from 'native-base'
 import Icon from 'react-native-vector-icons/Ionicons'
-import { baseUrl } from '../../components/url'
+import { baseUrl, mediaUrl } from '../../components/url'
 
 const LihatDokumenScreen = ({ route, navigation }) => {
     const { title, berkas } = route.params;
@@ -28,7 +28,7 @@ const LihatDokumenScreen = ({ route, navigation }) => {
                 </Body>
             </Header>
             <ImageBackground
-                source={{ uri: baseUrl + berkas }}
+                source={{ uri: mediaUrl + berkas }}
                 style={styles.imageBackground}
                 imageStyle={{ resizeMode: 'stretch' }}
             >

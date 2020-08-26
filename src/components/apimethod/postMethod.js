@@ -20,6 +20,7 @@ const postMethod = async (url, data = null, token = null) => {
             switch (error.response.status) {
                 case 400:
                     let data = ''
+                    console.log(error.response.data)
                     if (error.response.data.length == 1) {
                         data = { 'error': Object.values(error.response.data)[0] }
                     }
@@ -27,7 +28,13 @@ const postMethod = async (url, data = null, token = null) => {
                         data = { 'error': Object.values(error.response.data)[0][0] }
                     }
                     else {
-                        data = { 'error': Object.values(error.response.data)[0] }
+                        if (error.response.data.password_lama){
+                            data = { 'error': Object.values(error.response.data)[0] }
+                        }
+                        else{
+                            data = { 'error': Object.values(error.response.data)[0][0] }
+                        }
+                        // console.log(data)
                     }
                     return data
                 default:
